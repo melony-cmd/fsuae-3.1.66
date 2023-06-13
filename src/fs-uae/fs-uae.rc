@@ -1,0 +1,24 @@
+1 VERSIONINFO
+FILEVERSION     3,1,66,0
+PRODUCTVERSION     3,1,66,0
+BEGIN
+  BLOCK "StringFileInfo"
+  BEGIN
+    BLOCK "040904E4"
+    BEGIN
+      VALUE "CompanyName", "Frode Solheim"
+      VALUE "FileDescription", "Cross-platform Amiga emulator"
+      VALUE "FileVersion", "3.1.66"
+      VALUE "InternalName", "fs-uae"
+      VALUE "LegalCopyright", "Copyright 2011-2017 Frode Solheim and others"
+      VALUE "OriginalFilename", "fs-uae.exe"
+      VALUE "ProductName", "FS-UAE"
+      VALUE "ProductVersion", "3.1.66"
+    END
+  END
+  BLOCK "VarFileInfo"
+  BEGIN
+    VALUE "Translation", 0x409, 1252
+  END
+END
+2 ICON "icon/fs-uae.ico"

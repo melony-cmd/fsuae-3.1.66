@@ -1,0 +1,20 @@
+[fs-uae-controller]
+name = N64 Adaptoid
+platform = linux
+
+[default]
+include = universal_gamepad
+axis_0_neg = lstick_left
+axis_0_pos = lstick_right
+axis_1_neg = lstick_up
+axis_1_pos = lstick_down
+button_0 = south_button
+button_10 = dpad_up
+button_11 = dpad_down
+button_12 = dpad_left
+button_13 = dpad_right
+button_3 = east_button
+button_6 = left_shoulder
+button_7 = right_shoulder
+button_8 = start_button
+button_9 = left_trigger
