@@ -29,6 +29,14 @@
 #include "filesys.h"
 
 /*
+* Returns HOST Clipboard Text
+*/
+static uae_u32 emulib_GetHostClipboard (void)
+{
+	return 0;
+}
+
+/*
 * Returns UAE Version
 */
 static uae_u32 emulib_GetVersion (void)
