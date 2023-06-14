@@ -1077,6 +1077,7 @@ static const char *overlay_names[] = {
 "Copyright 1995-2002 Bernd Schmidt, 1999-2017 Toni Wilen,\n" \
 "2003-2007 Richard Drummond, 2006-2011 Mustafa 'GnoStiC' Tufan,\n" \
 "2011-2017 Frode Solheim, and contributors.\n" \
+"2011-2023 T.J.Roughton\n" \
 "\n" \
 "This is free software; see the file COPYING for copying conditions. There\n" \
 "is NO warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR\n" \
