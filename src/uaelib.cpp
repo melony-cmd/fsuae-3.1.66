@@ -29,10 +29,20 @@
 #include "filesys.h"
 
 /*
-* Returns HOST Clipboard Text
+* HOST Clipboard !Text! to UAE Enviroment
 */
 static uae_u32 emulib_GetHostClipboard (void)
 {
+	printf("emulib_GetHostClipboard\n");
+	return 0;
+}
+
+/*
+* UAE Clipboard !Text! to Host Enviroment
+*/
+static uae_u32 emulib_GetUAEClipboard (void)
+{
+	printf("emulib_GetUAEClipboard\n");
 	return 0;
 }
 
