@@ -76,3 +76,16 @@ static int DebugFunc(void)
 {
     calltrap (15);
 }
+
+/*
+  Extended functionality added by T.J.Roughton 15th June 2023
+  That is why the code style changes below :)
+ */
+
+static int GetHostClipboard(void) {
+    calltrap(16);
+}
+
+static int GetUAEClipboard(void) {
+    calltrap(17);
+}
