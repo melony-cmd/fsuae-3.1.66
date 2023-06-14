@@ -1,1 +1,4 @@
-# dummy
+libfsemu/src/audio/alsa-audio.o: libfsemu/src/audio/alsa-audio.c \
+ /usr/include/stdc-predef.h config.h
+/usr/include/stdc-predef.h:
+config.h:

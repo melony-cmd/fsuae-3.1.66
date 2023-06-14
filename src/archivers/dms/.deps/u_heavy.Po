@@ -1,1 +1,9 @@
-# dummy
+src/archivers/dms/u_heavy.o: src/archivers/dms/u_heavy.cpp \
+ /usr/include/stdc-predef.h src/archivers/dms/cdata.h \
+ src/archivers/dms/u_heavy.h src/archivers/dms/getbits.h \
+ src/archivers/dms/maketbl.h
+/usr/include/stdc-predef.h:
+src/archivers/dms/cdata.h:
+src/archivers/dms/u_heavy.h:
+src/archivers/dms/getbits.h:
+src/archivers/dms/maketbl.h:

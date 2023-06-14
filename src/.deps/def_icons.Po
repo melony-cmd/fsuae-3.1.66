@@ -1,1 +1,2 @@
-# dummy
+src/def_icons.o: src/def_icons.cpp /usr/include/stdc-predef.h
+/usr/include/stdc-predef.h:

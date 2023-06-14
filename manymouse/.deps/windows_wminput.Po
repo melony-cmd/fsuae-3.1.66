@@ -1,1 +1,4 @@
-# dummy
+manymouse/windows_wminput.o: manymouse/windows_wminput.c \
+ /usr/include/stdc-predef.h manymouse/manymouse.h
+/usr/include/stdc-predef.h:
+manymouse/manymouse.h:

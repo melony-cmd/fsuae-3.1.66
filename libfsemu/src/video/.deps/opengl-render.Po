@@ -1,1 +1,3 @@
-# dummy
+libfsemu/src/video/opengl-render.o: libfsemu/src/video/opengl-render.c \
+ /usr/include/stdc-predef.h
+/usr/include/stdc-predef.h:

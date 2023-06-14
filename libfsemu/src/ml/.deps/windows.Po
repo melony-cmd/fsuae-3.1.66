@@ -1,1 +1,4 @@
-# dummy
+libfsemu/src/ml/windows.o: libfsemu/src/ml/windows.c \
+ /usr/include/stdc-predef.h config.h
+/usr/include/stdc-predef.h:
+config.h:

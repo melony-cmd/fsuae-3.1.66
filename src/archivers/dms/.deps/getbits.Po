@@ -1,1 +1,6 @@
-# dummy
+src/archivers/dms/getbits.o: src/archivers/dms/getbits.cpp \
+ /usr/include/stdc-predef.h src/archivers/dms/cdata.h \
+ src/archivers/dms/getbits.h
+/usr/include/stdc-predef.h:
+src/archivers/dms/cdata.h:
+src/archivers/dms/getbits.h:

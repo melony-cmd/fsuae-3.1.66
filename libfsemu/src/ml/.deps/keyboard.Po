@@ -1,1 +1,4 @@
-# dummy
+libfsemu/src/ml/keyboard.o: libfsemu/src/ml/keyboard.c \
+ /usr/include/stdc-predef.h config.h
+/usr/include/stdc-predef.h:
+config.h:

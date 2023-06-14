@@ -1,1 +1,3 @@
-# dummy
+src/ppc/pixman-stubs.o: src/ppc/pixman-stubs.cpp \
+ /usr/include/stdc-predef.h
+/usr/include/stdc-predef.h:

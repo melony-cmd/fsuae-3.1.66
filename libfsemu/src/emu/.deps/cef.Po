@@ -1,1 +1,4 @@
-# dummy
+libfsemu/src/emu/cef.o: libfsemu/src/emu/cef.cpp \
+ /usr/include/stdc-predef.h config.h
+/usr/include/stdc-predef.h:
+config.h:

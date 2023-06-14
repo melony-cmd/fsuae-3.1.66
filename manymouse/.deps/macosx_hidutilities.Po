@@ -1,1 +1,4 @@
-# dummy
+manymouse/macosx_hidutilities.o: manymouse/macosx_hidutilities.c \
+ /usr/include/stdc-predef.h manymouse/manymouse.h
+/usr/include/stdc-predef.h:
+manymouse/manymouse.h:

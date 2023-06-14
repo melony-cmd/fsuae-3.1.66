@@ -1,1 +1,6 @@
-# dummy
+src/archivers/dms/crc_csum.o: src/archivers/dms/crc_csum.cpp \
+ /usr/include/stdc-predef.h src/archivers/dms/cdata.h \
+ src/archivers/dms/crc_csum.h
+/usr/include/stdc-predef.h:
+src/archivers/dms/cdata.h:
+src/archivers/dms/crc_csum.h:

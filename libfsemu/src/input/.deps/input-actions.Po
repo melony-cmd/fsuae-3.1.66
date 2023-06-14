@@ -1,1 +1,4 @@
-# dummy
+libfsemu/src/input/input-actions.o: libfsemu/src/input/input-actions.c \
+ /usr/include/stdc-predef.h config.h
+/usr/include/stdc-predef.h:
+config.h:

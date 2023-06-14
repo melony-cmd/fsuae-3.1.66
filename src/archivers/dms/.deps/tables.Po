@@ -1,1 +1,6 @@
-# dummy
+src/archivers/dms/tables.o: src/archivers/dms/tables.cpp \
+ /usr/include/stdc-predef.h src/archivers/dms/cdata.h \
+ src/archivers/dms/tables.h
+/usr/include/stdc-predef.h:
+src/archivers/dms/cdata.h:
+src/archivers/dms/tables.h:

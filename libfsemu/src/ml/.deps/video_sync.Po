@@ -1,1 +1,4 @@
-# dummy
+libfsemu/src/ml/video_sync.o: libfsemu/src/ml/video_sync.c \
+ /usr/include/stdc-predef.h config.h
+/usr/include/stdc-predef.h:
+config.h:

@@ -1,1 +1,3 @@
-# dummy
+libfsemu/src/input/legacy-input.o: libfsemu/src/input/legacy-input.c \
+ /usr/include/stdc-predef.h
+/usr/include/stdc-predef.h:

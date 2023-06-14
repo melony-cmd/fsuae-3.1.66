@@ -1,1 +1,61 @@
-# dummy
+libfsemu/src/video/render.o: libfsemu/src/video/render.c \
+ /usr/include/stdc-predef.h config.h libfsemu/include/fs/emu/log.h \
+ libfsemu/include/fs/log.h libfsemu/include/fs/emu/options.h \
+ libfsemu/include/fs/ml/options.h libfsemu/include/fs/emu/render.h \
+ /usr/lib/gcc/x86_64-pc-linux-gnu/13.1.1/include/stdbool.h \
+ libfsemu/include/fs/ml/opengl.h glad/include/glad/glad.h \
+ glad/include/KHR/khrplatform.h \
+ /usr/lib/gcc/x86_64-pc-linux-gnu/13.1.1/include/stdint.h \
+ /usr/include/stdint.h /usr/include/bits/libc-header-start.h \
+ /usr/include/features.h /usr/include/features-time64.h \
+ /usr/include/bits/wordsize.h /usr/include/bits/timesize.h \
+ /usr/include/sys/cdefs.h /usr/include/bits/long-double.h \
+ /usr/include/gnu/stubs.h /usr/include/gnu/stubs-64.h \
+ /usr/include/bits/types.h /usr/include/bits/typesizes.h \
+ /usr/include/bits/time64.h /usr/include/bits/wchar.h \
+ /usr/include/bits/stdint-intn.h /usr/include/bits/stdint-uintn.h \
+ libfsemu/include/fs/conf.h libfsemu/include/fs/inifile.h \
+ /usr/include/assert.h /usr/include/string.h \
+ /usr/lib/gcc/x86_64-pc-linux-gnu/13.1.1/include/stddef.h \
+ /usr/include/bits/types/locale_t.h /usr/include/bits/types/__locale_t.h \
+ /usr/include/strings.h libfsemu/src/video/../emu/texture.h \
+ libfsemu/include/fs/image.h libfsemu/include/fs/ref.h
+/usr/include/stdc-predef.h:
+config.h:
+libfsemu/include/fs/emu/log.h:
+libfsemu/include/fs/log.h:
+libfsemu/include/fs/emu/options.h:
+libfsemu/include/fs/ml/options.h:
+libfsemu/include/fs/emu/render.h:
+/usr/lib/gcc/x86_64-pc-linux-gnu/13.1.1/include/stdbool.h:
+libfsemu/include/fs/ml/opengl.h:
+glad/include/glad/glad.h:
+glad/include/KHR/khrplatform.h:
+/usr/lib/gcc/x86_64-pc-linux-gnu/13.1.1/include/stdint.h:
+/usr/include/stdint.h:
+/usr/include/bits/libc-header-start.h:
+/usr/include/features.h:
+/usr/include/features-time64.h:
+/usr/include/bits/wordsize.h:
+/usr/include/bits/timesize.h:
+/usr/include/sys/cdefs.h:
+/usr/include/bits/long-double.h:
+/usr/include/gnu/stubs.h:
+/usr/include/gnu/stubs-64.h:
+/usr/include/bits/types.h:
+/usr/include/bits/typesizes.h:
+/usr/include/bits/time64.h:
+/usr/include/bits/wchar.h:
+/usr/include/bits/stdint-intn.h:
+/usr/include/bits/stdint-uintn.h:
+libfsemu/include/fs/conf.h:
+libfsemu/include/fs/inifile.h:
+/usr/include/assert.h:
+/usr/include/string.h:
+/usr/lib/gcc/x86_64-pc-linux-gnu/13.1.1/include/stddef.h:
+/usr/include/bits/types/locale_t.h:
+/usr/include/bits/types/__locale_t.h:
+/usr/include/strings.h:
+libfsemu/src/video/../emu/texture.h:
+libfsemu/include/fs/image.h:
+libfsemu/include/fs/ref.h:

@@ -1,1 +1,4 @@
-# dummy
+libfsemu/src/ml/macosx.o: libfsemu/src/ml/macosx.c \
+ /usr/include/stdc-predef.h config.h
+/usr/include/stdc-predef.h:
+config.h:

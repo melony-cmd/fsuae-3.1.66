@@ -1,1 +1,2 @@
-# dummy
+prowizard/r/Viruz2.o: prowizard/r/Viruz2.c /usr/include/stdc-predef.h
+/usr/include/stdc-predef.h:

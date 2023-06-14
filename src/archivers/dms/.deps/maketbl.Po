@@ -1,1 +1,6 @@
-# dummy
+src/archivers/dms/maketbl.o: src/archivers/dms/maketbl.cpp \
+ /usr/include/stdc-predef.h src/archivers/dms/cdata.h \
+ src/archivers/dms/maketbl.h
+/usr/include/stdc-predef.h:
+src/archivers/dms/cdata.h:
+src/archivers/dms/maketbl.h:

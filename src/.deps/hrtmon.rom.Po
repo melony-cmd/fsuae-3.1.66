@@ -1,1 +1,2 @@
-# dummy
+src/hrtmon.rom.o: src/hrtmon.rom.cpp /usr/include/stdc-predef.h
+/usr/include/stdc-predef.h:
