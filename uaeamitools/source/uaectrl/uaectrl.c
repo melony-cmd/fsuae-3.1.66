@@ -11,6 +11,8 @@
  *                                                         *
  ***********************************************************/
 
+/* sc uaectrl.c opt link to uaectrl noicons */
+
 /*
  0.1 -- Orginal Version
  0.2 -- Code cleaning because no one can work in a mess!
