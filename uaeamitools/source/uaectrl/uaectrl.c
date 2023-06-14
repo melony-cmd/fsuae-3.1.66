@@ -47,7 +47,7 @@ int main() {
 	i = GetUaeConfig( &config );
 
 	while( quit == 0 ) {
-		printf(" UAE-Control v0.1\n\n");
+		printf(" UAE-Control v0.3\n\n");
 		printf(" 1) Reset\n");
 		printf(" 2) Debug\n");
 		printf(" 3) Exit Emulator\n");
@@ -158,11 +158,11 @@ int main() {
 				}
 				break;
 
-			case 10:
+			case 128:
 				GetHostClipboard();
 				break;
 
-			case 11:
+			case 129:
 				GetUAEClipboard();
 				break;
 

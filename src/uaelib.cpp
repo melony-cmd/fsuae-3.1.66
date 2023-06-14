@@ -31,18 +31,16 @@
 /*
 * HOST Clipboard !Text! to UAE Enviroment
 */
-static uae_u32 emulib_GetHostClipboard (void)
-{
-	printf("emulib_GetHostClipboard\n");
+static uae_u32 emulib_GetHostClipboard (void) {
+	printf("emulib_GetHostClipboard()\n");
 	return 0;
 }
 
 /*
 * UAE Clipboard !Text! to Host Enviroment
 */
-static uae_u32 emulib_GetUAEClipboard (void)
-{
-	printf("emulib_GetUAEClipboard\n");
+static uae_u32 emulib_GetUAEClipboard (void) {
+	printf("emulib_GetUAEClipboard()\n");
 	return 0;
 }
 
@@ -378,8 +376,10 @@ static int native_dos_op (uae_u32 mode, uae_u32 p1, uae_u32 p2, uae_u32 p3)
 	return 0;
 }
 
-static uae_u32 uaelib_demux_common(uae_u32 ARG0, uae_u32 ARG1, uae_u32 ARG2, uae_u32 ARG3, uae_u32 ARG4, uae_u32 ARG5)
-{
+static uae_u32 uaelib_demux_common(uae_u32 ARG0, uae_u32 ARG1, uae_u32 ARG2, uae_u32 ARG3, uae_u32 ARG4, uae_u32 ARG5) {
+
+	write_log(_T("uaelib_demux_common() TRAP CALL: %d\n"), ARG0);
+
 	switch (ARG0) {
 		case 0: return emulib_GetVersion();
 		case 1: return emulib_GetUaeConfig(ARG1);
@@ -432,6 +432,11 @@ static uae_u32 uaelib_demux_common(uae_u32 ARG0, uae_u32 ARG1, uae_u32 ARG2, uae
 			m68k_dreg(regs, 1) = d1;
 			return d0;
 		}
+
+		/* keep away from whatever is going above ;) */
+
+		case 128: return emulib_GetHostClipboard();
+		case 129: return emulib_GetUAEClipboard();
 
 	}
 	return 0;
