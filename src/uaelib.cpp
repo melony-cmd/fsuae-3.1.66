@@ -1,18 +1,25 @@
 /*
 * UAE - The U*nix Amiga Emulator
 *
-* UAE Library v0.1
+* UAE Library v0.3
 *
 * (c) 1996 Tauno Taipaleenmaki <tataipal@raita.oulu.fi>
 *
 * Change UAE parameters and other stuff from inside the emulation.
 */
 
+#define USE_SDL
+
+#ifdef USE_SDL
+	#include <SDL.h>
+#endif
+
 #include "sysconfig.h"
 #include "sysdeps.h"
 
 #include <assert.h>
 #include <string.h>
+#include <X11/Xlib.h>
 
 #include "options.h"
 #include "uae.h"
@@ -29,10 +36,18 @@
 #include "filesys.h"
 
 /*
-* HOST Clipboard !Text! to UAE Enviroment
+ *  Clipboard
+ */
+
+/*
+* HOST Clipboard to UAE Enviroment
 */
+
 static uae_u32 emulib_GetHostClipboard (void) {
+
 	printf("emulib_GetHostClipboard()\n");
+	printf("%s\n",SDL_GetClipboardText());
+
 	return 0;
 }
 
