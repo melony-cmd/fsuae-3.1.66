@@ -89,6 +89,15 @@ static int GetHostClipboard(void) {
     calltrap(128);
 }
 
-static int GetUAEClipboard(void) {
+static int GetAmigaClipboard(void) {
     calltrap(129);
+}
+
+
+static int HostRunProgram(UBYTE *program) {
+    calltrap(130, program);
+}
+
+static int AmigaRunProgram(void) {
+    calltrap(131);
 }

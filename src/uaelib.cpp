@@ -17,6 +17,7 @@
 #include "sysconfig.h"
 #include "sysdeps.h"
 
+#include <unistd.h>
 #include <assert.h>
 #include <string.h>
 #include <X11/Xlib.h>
@@ -54,8 +55,39 @@ static uae_u32 emulib_GetHostClipboard (void) {
 /*
 * UAE Clipboard !Text! to Host Enviroment
 */
-static uae_u32 emulib_GetUAEClipboard (void) {
+static uae_u32 emulib_GetAmigaClipboard (void) {
 	printf("emulib_GetUAEClipboard()\n");
+	return 0;
+}
+
+/*
+* Runs command on host
+* - Probably the easist of the 2 functions as it just telling the emulator to call an external program and run it.
+*/
+static uae_u32 emulib_HostRunProgram (uaecptr program) {
+	printf("emulib_HostRunProgram()\n");
+	int i = 0;
+	char real_program[256];
+	char buffer[1024];
+
+	TCHAR *s;
+	while ((real_program[i] = get_byte (program + i)) != 0 && i++ != 254);
+
+	if (i == 255)
+		return 0; /* ENAMETOOLONG */
+
+	sprintf(buffer,"%s&",real_program);
+	printf("Run:%s\n",buffer);
+	system(buffer);
+	return 0;
+}
+
+/*
+* Runs command on Amiga
+* - Hardest to implyment because fs-uae need to listen to messages from -any- application that sends a message to it
+*/
+static uae_u32 emulib_AmigaRunProgram (void) {
+	printf("emulib_AmigaRunProgram()\n");
 	return 0;
 }
 
@@ -222,8 +254,7 @@ static uae_u32 emulib_InsertDisk (uaecptr name, uae_u32 drive)
 	if (drive > 3)
 		return 0;
 
-	while ((real_name[i] = get_byte (name + i)) != 0 && i++ != 254)
-		;
+	while ((real_name[i] = get_byte (name + i)) != 0 && i++ != 254);
 
 	if (i == 255)
 		return 0; /* ENAMETOOLONG */
@@ -451,8 +482,9 @@ static uae_u32 uaelib_demux_common(uae_u32 ARG0, uae_u32 ARG1, uae_u32 ARG2, uae
 		/* keep away from whatever is going above ;) */
 
 		case 128: return emulib_GetHostClipboard();
-		case 129: return emulib_GetUAEClipboard();
-
+		case 129: return emulib_GetAmigaClipboard();
+		case 130: return emulib_HostRunProgram(ARG1);
+		case 131: return emulib_AmigaRunProgram();
 	}
 	return 0;
 }

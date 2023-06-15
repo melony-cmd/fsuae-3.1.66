@@ -47,18 +47,20 @@ int main() {
 	i = GetUaeConfig( &config );
 
 	while( quit == 0 ) {
-		printf(" UAE-Control v0.3\n\n");
-		printf(" 1) Reset\n");
-		printf(" 2) Debug\n");
-		printf(" 3) Exit Emulator\n");
-		printf(" 4) Change framerate     (Currently : %ld)\n", config.framerate);
-		printf(" 5) Toggle sound         (Currently : %s)\n", config.do_output_sound ? "ON" : "OFF");
-		printf(" 6) Toggle fake joystick (Currently : %s)\n", config.do_fake_joystick ? "ON" : "OFF");
-		printf(" 7) Change language      (Currently : %s)\n", langs[config.keyboard]);
-		printf(" 8) Eject a disk\n");
-		printf(" 9) Insert a disk\n");
-		printf("10) GetHostClipboard\n");
-		printf("11) GetUAEClipboard\n");
+		printf("  UAE-Control v0.3\n\n");
+		printf("  1) Reset\n");
+		printf("  2) Debug\n");
+		printf("  3) Exit Emulator\n");
+		printf("  4) Change framerate     (Currently : %ld)\n", config.framerate);
+		printf("  5) Toggle sound         (Currently : %s)\n", config.do_output_sound ? "ON" : "OFF");
+		printf("  6) Toggle fake joystick (Currently : %s)\n", config.do_fake_joystick ? "ON" : "OFF");
+		printf("  7) Change language      (Currently : %s)\n", langs[config.keyboard]);
+		printf("  8) Eject a disk\n");
+		printf("  9) Insert a disk\n\n");
+		printf("128) GetHostClipboard\n");
+		printf("129) GetAmigaClipboard\n");
+		printf("130) -\n");
+		printf("131) -\n");
 		printf("99) Exit UAE-Control\n\n");
 		correct = 0;
 
@@ -158,17 +160,30 @@ int main() {
 				}
 				break;
 
+			case 99:
+				quit = 1;
+				break;
+
 			case 128:
 				GetHostClipboard();
 				break;
 
 			case 129:
-				GetUAEClipboard();
+				GetAmigaClipboard();
 				break;
 
-			case 99:
-				quit = 1;
+			case 130:
+	  		printf("(HOST) Name of Program:");
+  			gets( buf );
+				HostRunProgram((UBYTE *)&buf);
 				break;
+
+			case 131:
+				AmigaRunProgram();
+				break;
+
+
+
 		}
 	}
 	quit_program(0, "");
