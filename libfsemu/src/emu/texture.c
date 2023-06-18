@@ -356,6 +356,7 @@ static void load_atlas_texture(fs_image *atlas_image,
 
 static void initialize_atlas(fs_image *image)
 {
+    /*
     load_atlas_texture(image, TEXTURE_SIDEBAR_EDGE, "sidebar_edge.png");
     load_atlas_texture(image, TEXTURE_SIDEBAR, "sidebar.png");
     load_atlas_texture(image, TEXTURE_GLOSS, "gloss.png");
@@ -381,7 +382,7 @@ static void initialize_atlas(fs_image *image)
                        "bezel/left-overlay.png");
     load_atlas_texture(image, TEXTURE_BEZEL_RIGHT_OVERLAY,
                        "bezel/right-overlay.png");
-
+    */
     //fs_image_save_data("atlas-output-test.png", image->data,
     //        image->width, image->height, 4);
 }

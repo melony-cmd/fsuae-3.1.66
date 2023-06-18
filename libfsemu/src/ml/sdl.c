@@ -1,48 +1,52 @@
 #ifdef HAVE_CONFIG_H
-#include "config.h"
+    #include "config.h"
 #endif
 
 #ifdef USE_SDL_VIDEO
 
-// FIXME: make libfsml independent of libfsemu
-#include "../emu/video.h"
+    // FIXME: make libfsml independent of libfsemu
+    #include "../emu/video.h"
+    #include "message.h"
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <stddef.h>
-#include <string.h>
+    #include <stdio.h>
+    #include <stdlib.h>
+    #include <stddef.h>
+    #include <string.h>
 
-#ifdef USE_SDL2
-#define USE_SDL
-#endif
+    #ifdef USE_SDL2
+        #define USE_SDL
+    #endif
 
-#ifdef USE_SDL
-#include <SDL.h>
-#endif
+    #ifdef USE_SDL
+        #include <SDL.h>
+    #endif
 
-//#ifdef USE_GLIB
-//#include <glib.h>
-//#endif
+    //#ifdef USE_GLIB
+    //#include <glib.h>
+    //#endif
 
-#include <fs/conf.h>
-#include <fs/lazyness.h>
-#ifdef WITH_GLEW
-#include <GL/glew.h>
-#endif
-#include <fs/glib.h>
-#include <fs/ml.h>
-#include <fs/thread.h>
+    #include <fs/conf.h>
+    #include <fs/lazyness.h>
 
-#ifdef USE_OPENGL
-#include <fs/ml/opengl.h>
-#endif
-#include <fs/ml/options.h>
+    #ifdef WITH_GLEW
+        #include <GL/glew.h>
+    #endif
 
-#define FSE_INTERNAL_API
-#include <fs/emu/input.h>
-#include <fs/emu/monitor.h>
-#include <fs/emu/video.h>
-#include "ml_internal.h"
+    #include <fs/glib.h>
+    #include <fs/ml.h>
+    #include <fs/thread.h>
+
+    #ifdef USE_OPENGL
+        #include <fs/ml/opengl.h>
+    #endif
+
+    #include <fs/ml/options.h>
+
+    #define FSE_INTERNAL_API
+    #include <fs/emu/input.h>
+    #include <fs/emu/monitor.h>
+    #include <fs/emu/video.h>
+    #include "ml_internal.h"
 
 SDL_Window *g_fs_ml_window = NULL;
 SDL_GLContext g_fs_ml_context = 0;
@@ -258,6 +262,7 @@ static void log_opengl_information(void)
 static void set_video_mode()
 {
     int flags = SDL_WINDOW_OPENGL;
+
     if (g_fs_emu_video_fullscreen_mode != FULLSCREEN_WINDOW &&
             g_window_resizable) {
         flags |= SDL_WINDOW_RESIZABLE;
@@ -349,7 +354,13 @@ static void set_video_mode()
     g_fs_ml_video_height = h;
     fs_log("[SDL] CreateWindow(x=%d, y=%d, w=%d, h=%d, flags=%d)\n",
            x, y, w, h, flags);
-    g_fs_ml_window = SDL_CreateWindow(g_window_title, x, y, w, h, flags);
+
+
+    //setting window_border = 1 in either config.fs-uae or by argument to ./fs-uae didn't appear to do anything
+    //thus fuck off!
+    //g_fs_ml_window = SDL_CreateWindow(g_window_title, x, y, w, h, flags);
+
+    g_fs_ml_window = SDL_CreateWindow(g_window_title, x, y, w, h, SDL_WINDOW_BORDERLESS|SDL_WINDOW_OPENGL);
     if (g_initial_input_grab) {
         SDL_SetRelativeMouseMode(SDL_TRUE);
     }
@@ -548,7 +559,10 @@ static void fs_emu_monitor_init()
             "SDL_GetCurrentDisplayMode failed.", NULL);
         exit(1);
     }
+#endif
+
     g_fs_emu_monitor_count = SDL_GetNumVideoDisplays();
+    printf("g_fs_emu_monitor_count=%d\n",g_fs_emu_monitor_count);
 
     if (g_fs_emu_monitor_count < 1) {
         fs_log("Error %d retrieving number of displays/monitors\n",
@@ -583,7 +597,7 @@ static void fs_emu_monitor_init()
 
         g_array_append_val(g_fs_emu_monitors, monitor);
     }
-#endif
+//#endif
 
     g_array_sort(g_fs_emu_monitors, fs_emu_monitor_compare);
     for (int i = 0; i < g_fs_emu_monitor_count; i++) {
@@ -1210,14 +1224,23 @@ static void post_main_loop(void)
 
 int fs_ml_main_loop(void)
 {
+    init_message();
+
     while (g_fs_ml_running) {
         fs_ml_event_loop();
         process_video_events();
+
+        // handle external messages
+        process_message_events();
+
         // Handled by SDL2
         // fs_ml_prevent_power_saving();
         fs_ml_render_iteration();
     }
     post_main_loop();
+
+    deinit_message();
+
     return 0;
 }
 

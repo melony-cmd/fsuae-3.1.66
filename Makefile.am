@@ -758,6 +758,7 @@ libfsemu_a_SOURCES = \
 	libfsemu/src/ml/ml.c \
 	libfsemu/src/ml/ml_internal.h \
 	libfsemu/src/ml/mouse.c \
+  libfsemu/src/ml/message.c \
 	libfsemu/src/ml/opengl.c \
 	libfsemu/src/ml/rawinput.c \
 	libfsemu/src/ml/render.c \

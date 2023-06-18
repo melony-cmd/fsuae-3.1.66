@@ -259,14 +259,15 @@ am__libfsemu_a_SOURCES_DIST = libfsemu/include/fs/base.h \
 	libfsemu/src/ml/input.c libfsemu/src/ml/keyboard.c \
 	libfsemu/src/ml/macosx.c libfsemu/src/ml/ml.c \
 	libfsemu/src/ml/ml_internal.h libfsemu/src/ml/mouse.c \
-	libfsemu/src/ml/opengl.c libfsemu/src/ml/rawinput.c \
-	libfsemu/src/ml/render.c libfsemu/src/ml/sdl.c \
-	libfsemu/src/ml/sdl2_keys.h libfsemu/src/ml/util.c \
-	libfsemu/src/ml/video.c libfsemu/src/ml/video_mode.c \
-	libfsemu/src/ml/video_sync.c libfsemu/src/ml/windows.c \
-	libfsemu/src/ml/x11.c libfsemu/src/opengl.c \
-	libfsemu/src/path.c libfsemu/src/ref.c libfsemu/src/thread.c \
-	libfsemu/src/time.c libfsemu/src/video/dummy-video.c \
+	libfsemu/src/ml/message.c libfsemu/src/ml/opengl.c \
+	libfsemu/src/ml/rawinput.c libfsemu/src/ml/render.c \
+	libfsemu/src/ml/sdl.c libfsemu/src/ml/sdl2_keys.h \
+	libfsemu/src/ml/util.c libfsemu/src/ml/video.c \
+	libfsemu/src/ml/video_mode.c libfsemu/src/ml/video_sync.c \
+	libfsemu/src/ml/windows.c libfsemu/src/ml/x11.c \
+	libfsemu/src/opengl.c libfsemu/src/path.c libfsemu/src/ref.c \
+	libfsemu/src/thread.c libfsemu/src/time.c \
+	libfsemu/src/video/dummy-video.c \
 	libfsemu/src/video/legacy-video.c \
 	libfsemu/src/video/opengl-render.c libfsemu/src/video/render.c \
 	libfsemu/src/video/sdl-video.c \
@@ -311,6 +312,7 @@ am_libfsemu_a_OBJECTS = libfsemu/src/audio/alsa-audio.$(OBJEXT) \
 	libfsemu/src/ml/keyboard.$(OBJEXT) \
 	libfsemu/src/ml/macosx.$(OBJEXT) libfsemu/src/ml/ml.$(OBJEXT) \
 	libfsemu/src/ml/mouse.$(OBJEXT) \
+	libfsemu/src/ml/message.$(OBJEXT) \
 	libfsemu/src/ml/opengl.$(OBJEXT) \
 	libfsemu/src/ml/rawinput.$(OBJEXT) \
 	libfsemu/src/ml/render.$(OBJEXT) libfsemu/src/ml/sdl.$(OBJEXT) \
@@ -1928,15 +1930,15 @@ libfsemu_a_SOURCES = libfsemu/include/fs/base.h \
 	libfsemu/src/ml/input.c libfsemu/src/ml/keyboard.c \
 	libfsemu/src/ml/macosx.c libfsemu/src/ml/ml.c \
 	libfsemu/src/ml/ml_internal.h libfsemu/src/ml/mouse.c \
-	libfsemu/src/ml/opengl.c libfsemu/src/ml/rawinput.c \
-	libfsemu/src/ml/render.c libfsemu/src/ml/sdl.c \
-	libfsemu/src/ml/sdl2_keys.h libfsemu/src/ml/util.c \
-	libfsemu/src/ml/video.c libfsemu/src/ml/video.c \
-	libfsemu/src/ml/video_mode.c libfsemu/src/ml/video_sync.c \
-	libfsemu/src/ml/windows.c libfsemu/src/ml/x11.c \
-	libfsemu/src/opengl.c libfsemu/src/path.c libfsemu/src/ref.c \
-	libfsemu/src/thread.c libfsemu/src/time.c \
-	libfsemu/src/video/dummy-video.c \
+	libfsemu/src/ml/message.c libfsemu/src/ml/opengl.c \
+	libfsemu/src/ml/rawinput.c libfsemu/src/ml/render.c \
+	libfsemu/src/ml/sdl.c libfsemu/src/ml/sdl2_keys.h \
+	libfsemu/src/ml/util.c libfsemu/src/ml/video.c \
+	libfsemu/src/ml/video.c libfsemu/src/ml/video_mode.c \
+	libfsemu/src/ml/video_sync.c libfsemu/src/ml/windows.c \
+	libfsemu/src/ml/x11.c libfsemu/src/opengl.c \
+	libfsemu/src/path.c libfsemu/src/ref.c libfsemu/src/thread.c \
+	libfsemu/src/time.c libfsemu/src/video/dummy-video.c \
 	libfsemu/src/video/legacy-video.c \
 	libfsemu/src/video/opengl-render.c libfsemu/src/video/render.c \
 	libfsemu/src/video/sdl-video.c \
@@ -2587,6 +2589,8 @@ libfsemu/src/ml/macosx.$(OBJEXT): libfsemu/src/ml/$(am__dirstamp) \
 libfsemu/src/ml/ml.$(OBJEXT): libfsemu/src/ml/$(am__dirstamp) \
 	libfsemu/src/ml/$(DEPDIR)/$(am__dirstamp)
 libfsemu/src/ml/mouse.$(OBJEXT): libfsemu/src/ml/$(am__dirstamp) \
+	libfsemu/src/ml/$(DEPDIR)/$(am__dirstamp)
+libfsemu/src/ml/message.$(OBJEXT): libfsemu/src/ml/$(am__dirstamp) \
 	libfsemu/src/ml/$(DEPDIR)/$(am__dirstamp)
 libfsemu/src/ml/opengl.$(OBJEXT): libfsemu/src/ml/$(am__dirstamp) \
 	libfsemu/src/ml/$(DEPDIR)/$(am__dirstamp)
@@ -3774,6 +3778,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@libfsemu/src/ml/$(DEPDIR)/input.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@libfsemu/src/ml/$(DEPDIR)/keyboard.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@libfsemu/src/ml/$(DEPDIR)/macosx.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@libfsemu/src/ml/$(DEPDIR)/message.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@libfsemu/src/ml/$(DEPDIR)/ml.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@libfsemu/src/ml/$(DEPDIR)/mouse.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@libfsemu/src/ml/$(DEPDIR)/opengl.Po@am__quote@

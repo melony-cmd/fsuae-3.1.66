@@ -150,14 +150,14 @@ libfsemu/src/ml/sdl.o: libfsemu/src/ml/sdl.c /usr/include/stdc-predef.h \
  /usr/lib/gcc/x86_64-pc-linux-gnu/13.1.1/include/stdbool.h \
  libfsemu/include/fs/inifile.h libfsemu/include/fs/ml.h \
  libfsemu/include/fs/emu/dialog.h libfsemu/src/ml/../emu/texture.h \
- libfsemu/include/fs/image.h /usr/include/SDL2/SDL.h \
- /usr/include/SDL2/SDL_main.h /usr/include/SDL2/SDL_stdinc.h \
- /usr/include/SDL2/SDL_config.h /usr/include/SDL2/SDL_platform.h \
- /usr/include/SDL2/begin_code.h /usr/include/SDL2/close_code.h \
- /usr/include/wchar.h /usr/include/bits/types/wint_t.h \
- /usr/include/bits/types/mbstate_t.h /usr/include/inttypes.h \
- /usr/include/ctype.h /usr/include/math.h /usr/include/bits/math-vector.h \
- /usr/include/bits/libm-simd-decl-stubs.h \
+ libfsemu/include/fs/image.h libfsemu/src/ml/message.h \
+ /usr/include/SDL2/SDL.h /usr/include/SDL2/SDL_main.h \
+ /usr/include/SDL2/SDL_stdinc.h /usr/include/SDL2/SDL_config.h \
+ /usr/include/SDL2/SDL_platform.h /usr/include/SDL2/begin_code.h \
+ /usr/include/SDL2/close_code.h /usr/include/wchar.h \
+ /usr/include/bits/types/wint_t.h /usr/include/bits/types/mbstate_t.h \
+ /usr/include/inttypes.h /usr/include/ctype.h /usr/include/math.h \
+ /usr/include/bits/math-vector.h /usr/include/bits/libm-simd-decl-stubs.h \
  /usr/include/bits/flt-eval-method.h /usr/include/bits/fp-logb.h \
  /usr/include/bits/fp-fast.h \
  /usr/include/bits/mathcalls-helper-functions.h \
@@ -518,6 +518,7 @@ libfsemu/include/fs/ml.h:
 libfsemu/include/fs/emu/dialog.h:
 libfsemu/src/ml/../emu/texture.h:
 libfsemu/include/fs/image.h:
+libfsemu/src/ml/message.h:
 /usr/include/SDL2/SDL.h:
 /usr/include/SDL2/SDL_main.h:
 /usr/include/SDL2/SDL_stdinc.h:

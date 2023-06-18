@@ -259,14 +259,15 @@ am__libfsemu_a_SOURCES_DIST = libfsemu/include/fs/base.h \
 	libfsemu/src/ml/input.c libfsemu/src/ml/keyboard.c \
 	libfsemu/src/ml/macosx.c libfsemu/src/ml/ml.c \
 	libfsemu/src/ml/ml_internal.h libfsemu/src/ml/mouse.c \
-	libfsemu/src/ml/opengl.c libfsemu/src/ml/rawinput.c \
-	libfsemu/src/ml/render.c libfsemu/src/ml/sdl.c \
-	libfsemu/src/ml/sdl2_keys.h libfsemu/src/ml/util.c \
-	libfsemu/src/ml/video.c libfsemu/src/ml/video_mode.c \
-	libfsemu/src/ml/video_sync.c libfsemu/src/ml/windows.c \
-	libfsemu/src/ml/x11.c libfsemu/src/opengl.c \
-	libfsemu/src/path.c libfsemu/src/ref.c libfsemu/src/thread.c \
-	libfsemu/src/time.c libfsemu/src/video/dummy-video.c \
+	libfsemu/src/ml/message.c libfsemu/src/ml/opengl.c \
+	libfsemu/src/ml/rawinput.c libfsemu/src/ml/render.c \
+	libfsemu/src/ml/sdl.c libfsemu/src/ml/sdl2_keys.h \
+	libfsemu/src/ml/util.c libfsemu/src/ml/video.c \
+	libfsemu/src/ml/video_mode.c libfsemu/src/ml/video_sync.c \
+	libfsemu/src/ml/windows.c libfsemu/src/ml/x11.c \
+	libfsemu/src/opengl.c libfsemu/src/path.c libfsemu/src/ref.c \
+	libfsemu/src/thread.c libfsemu/src/time.c \
+	libfsemu/src/video/dummy-video.c \
 	libfsemu/src/video/legacy-video.c \
 	libfsemu/src/video/opengl-render.c libfsemu/src/video/render.c \
 	libfsemu/src/video/sdl-video.c \
@@ -311,6 +312,7 @@ am_libfsemu_a_OBJECTS = libfsemu/src/audio/alsa-audio.$(OBJEXT) \
 	libfsemu/src/ml/keyboard.$(OBJEXT) \
 	libfsemu/src/ml/macosx.$(OBJEXT) libfsemu/src/ml/ml.$(OBJEXT) \
 	libfsemu/src/ml/mouse.$(OBJEXT) \
+	libfsemu/src/ml/message.$(OBJEXT) \
 	libfsemu/src/ml/opengl.$(OBJEXT) \
 	libfsemu/src/ml/rawinput.$(OBJEXT) \
 	libfsemu/src/ml/render.$(OBJEXT) libfsemu/src/ml/sdl.$(OBJEXT) \
@@ -1187,14 +1189,14 @@ distuninstallcheck_listfiles = find . -type f -print
 am__distuninstallcheck_listfiles = $(distuninstallcheck_listfiles) \
   | sed 's|^\./|$(prefix)/|' | grep -v '$(infodir)/dir$$'
 distcleancheck_listfiles = find . -type f -print
-ACLOCAL = ${SHELL} /home/inner/Projects/fs-uae-3.1.66/missing aclocal-1.15
+ACLOCAL = ${SHELL} /home/inner/Projects/fs-uae-3.1.66-github/missing aclocal-1.15
 ALLOCA = 
 AMTAR = $${TAR-tar}
 AM_DEFAULT_VERBOSITY = 1
 AR = ar
-AUTOCONF = ${SHELL} /home/inner/Projects/fs-uae-3.1.66/missing autoconf
-AUTOHEADER = ${SHELL} /home/inner/Projects/fs-uae-3.1.66/missing autoheader
-AUTOMAKE = ${SHELL} /home/inner/Projects/fs-uae-3.1.66/missing automake-1.15
+AUTOCONF = ${SHELL} /home/inner/Projects/fs-uae-3.1.66-github/missing autoconf
+AUTOHEADER = ${SHELL} /home/inner/Projects/fs-uae-3.1.66-github/missing autoheader
+AUTOMAKE = ${SHELL} /home/inner/Projects/fs-uae-3.1.66-github/missing automake-1.15
 AWK = gawk
 CARBON_LIBS = 
 CC = gcc
@@ -1239,7 +1241,7 @@ LIBS = -lm -ldl     -lgthread-2.0 -pthread -lglib-2.0  \
 LN_S = ln -s
 LTLIBOBJS = 
 LUA_CFLAGS = -DLUA_USE_POSIX
-MAKEINFO = ${SHELL} /home/inner/Projects/fs-uae-3.1.66/missing makeinfo
+MAKEINFO = ${SHELL} /home/inner/Projects/fs-uae-3.1.66-github/missing makeinfo
 MIR_CFLAGS = 
 MIR_LIBS = 
 MKDIR_P = /usr/bin/mkdir -p
@@ -1286,10 +1288,10 @@ X11_LIBS = -lX11
 ZIP = /usr/bin/zip
 ZLIB_CFLAGS = 
 ZLIB_LIBS = -lz 
-abs_builddir = /home/inner/Projects/fs-uae-3.1.66
-abs_srcdir = /home/inner/Projects/fs-uae-3.1.66
-abs_top_builddir = /home/inner/Projects/fs-uae-3.1.66
-abs_top_srcdir = /home/inner/Projects/fs-uae-3.1.66
+abs_builddir = /home/inner/Projects/fs-uae-3.1.66-github
+abs_srcdir = /home/inner/Projects/fs-uae-3.1.66-github
+abs_top_builddir = /home/inner/Projects/fs-uae-3.1.66-github
+abs_top_srcdir = /home/inner/Projects/fs-uae-3.1.66-github
 ac_ct_AR = ar
 ac_ct_CC = gcc
 ac_ct_CXX = g++
@@ -1318,7 +1320,7 @@ host_vendor = pc
 htmldir = ${docdir}
 includedir = ${prefix}/include
 infodir = ${datarootdir}/info
-install_sh = ${SHELL} /home/inner/Projects/fs-uae-3.1.66/install-sh
+install_sh = ${SHELL} /home/inner/Projects/fs-uae-3.1.66-github/install-sh
 libdir = ${exec_prefix}/lib
 libexecdir = ${exec_prefix}/libexec
 localedir = ${datarootdir}/locale
@@ -1928,15 +1930,15 @@ libfsemu_a_SOURCES = libfsemu/include/fs/base.h \
 	libfsemu/src/ml/input.c libfsemu/src/ml/keyboard.c \
 	libfsemu/src/ml/macosx.c libfsemu/src/ml/ml.c \
 	libfsemu/src/ml/ml_internal.h libfsemu/src/ml/mouse.c \
-	libfsemu/src/ml/opengl.c libfsemu/src/ml/rawinput.c \
-	libfsemu/src/ml/render.c libfsemu/src/ml/sdl.c \
-	libfsemu/src/ml/sdl2_keys.h libfsemu/src/ml/util.c \
-	libfsemu/src/ml/video.c libfsemu/src/ml/video.c \
-	libfsemu/src/ml/video_mode.c libfsemu/src/ml/video_sync.c \
-	libfsemu/src/ml/windows.c libfsemu/src/ml/x11.c \
-	libfsemu/src/opengl.c libfsemu/src/path.c libfsemu/src/ref.c \
-	libfsemu/src/thread.c libfsemu/src/time.c \
-	libfsemu/src/video/dummy-video.c \
+	libfsemu/src/ml/message.c libfsemu/src/ml/opengl.c \
+	libfsemu/src/ml/rawinput.c libfsemu/src/ml/render.c \
+	libfsemu/src/ml/sdl.c libfsemu/src/ml/sdl2_keys.h \
+	libfsemu/src/ml/util.c libfsemu/src/ml/video.c \
+	libfsemu/src/ml/video.c libfsemu/src/ml/video_mode.c \
+	libfsemu/src/ml/video_sync.c libfsemu/src/ml/windows.c \
+	libfsemu/src/ml/x11.c libfsemu/src/opengl.c \
+	libfsemu/src/path.c libfsemu/src/ref.c libfsemu/src/thread.c \
+	libfsemu/src/time.c libfsemu/src/video/dummy-video.c \
 	libfsemu/src/video/legacy-video.c \
 	libfsemu/src/video/opengl-render.c libfsemu/src/video/render.c \
 	libfsemu/src/video/sdl-video.c \
@@ -2587,6 +2589,8 @@ libfsemu/src/ml/macosx.$(OBJEXT): libfsemu/src/ml/$(am__dirstamp) \
 libfsemu/src/ml/ml.$(OBJEXT): libfsemu/src/ml/$(am__dirstamp) \
 	libfsemu/src/ml/$(DEPDIR)/$(am__dirstamp)
 libfsemu/src/ml/mouse.$(OBJEXT): libfsemu/src/ml/$(am__dirstamp) \
+	libfsemu/src/ml/$(DEPDIR)/$(am__dirstamp)
+libfsemu/src/ml/message.$(OBJEXT): libfsemu/src/ml/$(am__dirstamp) \
 	libfsemu/src/ml/$(DEPDIR)/$(am__dirstamp)
 libfsemu/src/ml/opengl.$(OBJEXT): libfsemu/src/ml/$(am__dirstamp) \
 	libfsemu/src/ml/$(DEPDIR)/$(am__dirstamp)
@@ -3774,6 +3778,7 @@ include libfsemu/src/input/$(DEPDIR)/sdl-input.Po
 include libfsemu/src/ml/$(DEPDIR)/input.Po
 include libfsemu/src/ml/$(DEPDIR)/keyboard.Po
 include libfsemu/src/ml/$(DEPDIR)/macosx.Po
+include libfsemu/src/ml/$(DEPDIR)/message.Po
 include libfsemu/src/ml/$(DEPDIR)/ml.Po
 include libfsemu/src/ml/$(DEPDIR)/mouse.Po
 include libfsemu/src/ml/$(DEPDIR)/opengl.Po

@@ -1,0 +1,5 @@
+FROM LIB:c.o "uaectrl.o"
+TO "uaectrl"
+LIB LIB:sc.lib LIB:amiga.lib
+NOICONS
+
