@@ -1,0 +1,4 @@
+FROM LIB:c.o "helloworld.o"
+TO "helloworld"
+LIB LIB:sc.lib LIB:amiga.lib
+

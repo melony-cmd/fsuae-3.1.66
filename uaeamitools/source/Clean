@@ -1,0 +1,6 @@
+delete #?.o
+delete #?.lnk
+delete #?.info
+delete template
+delete uaectrl
+

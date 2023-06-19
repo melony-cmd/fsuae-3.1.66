@@ -1,0 +1,3 @@
+delete #?.o
+delete #?.lnk
+sc uaectrl.c opt link to uaectrl noicons

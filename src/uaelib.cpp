@@ -1,7 +1,7 @@
 /*
 * UAE - The U*nix Amiga Emulator
 *
-* UAE Library v0.3
+* UAE Library v0.3.1
 *
 * (c) 1996 Tauno Taipaleenmaki <tataipal@raita.oulu.fi>
 *
@@ -43,7 +43,6 @@
 /*
 * HOST Clipboard to UAE Enviroment
 */
-
 static uae_u32 emulib_GetHostClipboard (void) {
 
 	printf("emulib_GetHostClipboard()\n");
@@ -87,6 +86,7 @@ static uae_u32 emulib_HostRunProgram (uaecptr program) {
 * - Hardest to implyment because fs-uae need to listen to messages from -any- application that sends a message to it
 */
 static uae_u32 emulib_AmigaRunProgram (void) {
+	// read fs-uaemessage pipe 'if called'
 	printf("emulib_AmigaRunProgram()\n");
 	return 0;
 }
@@ -94,22 +94,19 @@ static uae_u32 emulib_AmigaRunProgram (void) {
 /*
 * Returns UAE Version
 */
-static uae_u32 emulib_GetVersion (void)
-{
+static uae_u32 emulib_GetVersion (void) {
 	return version;
 }
 
 /*
 * Resets your amiga
 */
-static uae_u32 emulib_HardReset (void)
-{
+static uae_u32 emulib_HardReset (void) {
 	uae_reset(1, 1);
 	return 0;
 }
 
-static uae_u32 emulib_Reset (void)
-{
+static uae_u32 emulib_Reset (void) {
 	uae_reset(0, 0);
 	return 0;
 }
@@ -117,8 +114,7 @@ static uae_u32 emulib_Reset (void)
 /*
 * Enables SOUND
 */
-static uae_u32 emulib_EnableSound (uae_u32 val)
-{
+static uae_u32 emulib_EnableSound (uae_u32 val) {
 	if (!sound_available || currprefs.produce_sound == 2)
 		return 0;
 
@@ -129,8 +125,7 @@ static uae_u32 emulib_EnableSound (uae_u32 val)
 /*
 * Enables FAKE JOYSTICK
 */
-static uae_u32 emulib_EnableJoystick (uae_u32 val)
-{
+static uae_u32 emulib_EnableJoystick (uae_u32 val) {
 	currprefs.jports[0].id = val & 255;
 	currprefs.jports[1].id = (val >> 8) & 255;
 	return 1;
@@ -139,8 +134,7 @@ static uae_u32 emulib_EnableJoystick (uae_u32 val)
 /*
 * Sets the framerate
 */
-static uae_u32 emulib_SetFrameRate (uae_u32 val)
-{
+static uae_u32 emulib_SetFrameRate (uae_u32 val) {
 	if (val == 0)
 		return 0;
 	else if (val > 20)
@@ -152,10 +146,9 @@ static uae_u32 emulib_SetFrameRate (uae_u32 val)
 }
 
 /*
-* Changes keyboard language settings
-*/
-static uae_u32 emulib_ChangeLanguage (uae_u32 which)
-{
+ * Changes keyboard language settings
+ */
+static uae_u32 emulib_ChangeLanguage (uae_u32 which) {
 	if (which > 6)
 		return 0;
 	else {
@@ -188,13 +181,14 @@ static uae_u32 emulib_ChangeLanguage (uae_u32 which)
 	}
 }
 
-/* The following ones don't work as we never realloc the arrays... */
+/* The following ones don't work as we never realloc the arrays...
+ * -> then why get me all excited by leaving the code behind hmmm?
+ */
 /*
 * Changes chip memory size
 *  (reboots)
 */
-static uae_u32 REGPARAM2 emulib_ChgCMemSize (uae_u32 memsize)
-{
+static uae_u32 REGPARAM2 emulib_ChgCMemSize (uae_u32 memsize) {
 	if (memsize != 0x80000 && memsize != 0x100000 &&
 		memsize != 0x200000) {
 			memsize = 0x200000;
@@ -211,8 +205,7 @@ static uae_u32 REGPARAM2 emulib_ChgCMemSize (uae_u32 memsize)
 * Changes slow memory size
 *  (reboots)
 */
-static uae_u32 REGPARAM2 emulib_ChgSMemSize (uae_u32 memsize)
-{
+static uae_u32 REGPARAM2 emulib_ChgSMemSize (uae_u32 memsize) {
 	if (memsize != 0x80000 && memsize != 0x100000 &&
 		memsize != 0x180000 && memsize != 0x1C0000) {
 			memsize = 0;
@@ -229,8 +222,7 @@ static uae_u32 REGPARAM2 emulib_ChgSMemSize (uae_u32 memsize)
 * Changes fast memory size
 *  (reboots)
 */
-static uae_u32 REGPARAM2 emulib_ChgFMemSize (uae_u32 memsize)
-{
+static uae_u32 REGPARAM2 emulib_ChgFMemSize (uae_u32 memsize) {
 	if (memsize != 0x100000 && memsize != 0x200000 &&
 		memsize != 0x400000 && memsize != 0x800000) {
 			memsize = 0;
@@ -245,8 +237,7 @@ static uae_u32 REGPARAM2 emulib_ChgFMemSize (uae_u32 memsize)
 /*
 * Inserts a disk
 */
-static uae_u32 emulib_InsertDisk (uaecptr name, uae_u32 drive)
-{
+static uae_u32 emulib_InsertDisk (uaecptr name, uae_u32 drive) {
 	int i = 0;
 	char real_name[256];
 	TCHAR *s;
@@ -269,8 +260,7 @@ static uae_u32 emulib_InsertDisk (uaecptr name, uae_u32 drive)
 /*
 * Exits the emulator
 */
-static uae_u32 emulib_ExitEmu (void)
-{
+static uae_u32 emulib_ExitEmu (void) {
 	uae_quit ();
 	return 1;
 }
@@ -278,8 +268,7 @@ static uae_u32 emulib_ExitEmu (void)
 /*
 * Gets UAE Configuration
 */
-static uae_u32 emulib_GetUaeConfig (uaecptr place)
-{
+static uae_u32 emulib_GetUaeConfig (uaecptr place) {
 	int i, j;
 
 	put_long (place, version);
@@ -321,16 +310,14 @@ static uae_u32 emulib_GetUaeConfig (uaecptr place)
 *
 * NOT IMPLEMENTED YET
 */
-static uae_u32 emulib_SetUaeConfig (uaecptr place)
-{
+static uae_u32 emulib_SetUaeConfig (uaecptr place) {
 	return 1;
 }
 
 /*
 * Gets the name of the disk in the given drive
 */
-static uae_u32 emulib_GetDisk (uae_u32 drive, uaecptr name)
-{
+static uae_u32 emulib_GetDisk (uae_u32 drive, uaecptr name) {
 	int i;
 	if (drive > 3)
 		return 0;
@@ -344,25 +331,32 @@ static uae_u32 emulib_GetDisk (uae_u32 drive, uaecptr name)
 /*
 * Enter debugging state
 */
-static uae_u32 emulib_Debug (void)
-{
-#ifdef DEBUGGER
-	activate_debugger ();
-	return 1;
-#else
-	return 0;
-#endif
+static uae_u32 emulib_Debug (void) {
+
+	#ifdef DEBUGGER
+		activate_debugger ();
+		return 1;
+	#else
+		return 0;
+	#endif
 }
 
-
+/*
+ * What an infernal mess!
+ */
 #define CREATE_NATIVE_FUNC_PTR uae_u32 (* native_func) (uae_u32, uae_u32, uae_u32, uae_u32, uae_u32, uae_u32, uae_u32, \
 	uae_u32, uae_u32, uae_u32, uae_u32, uae_u32, uae_u32)
+
 #define SET_NATIVE_FUNC(x) native_func = (uae_u32 (*)(uae_u32, uae_u32, uae_u32, uae_u32, uae_u32, uae_u32, uae_u32, uae_u32, uae_u32, uae_u32, uae_u32, uae_u32, uae_u32))(x)
+
 #define CALL_NATIVE_FUNC( d1,d2,d3,d4,d5,d6,d7,a1,a2,a3,a4,a5,a6 ) if(native_func) native_func( d1,d2,d3,d4,d5,d6,d7,a1,a2,a3,a4,a5,a6 )
 /* A0 - Contains a ptr to the native .obj data.  This ptr is Amiga-based. */
 /*      We simply find the first function in this .obj data, and execute it. */
-static uae_u32 REGPARAM2 emulib_ExecuteNativeCode (void)
-{
+
+/*
+ *
+ */
+static uae_u32 REGPARAM2 emulib_ExecuteNativeCode (void) {
 #if 0
 	uaecptr object_AAM = m68k_areg (regs, 0);
 	uae_u32 d1 = m68k_dreg (regs, 1);
@@ -394,13 +388,17 @@ static uae_u32 REGPARAM2 emulib_ExecuteNativeCode (void)
 	return 0;
 }
 
-static uae_u32 emulib_Minimize (void)
-{
+/*
+ * Genius this does... nothing! :)
+ */
+static uae_u32 emulib_Minimize (void) {
 	return 0; // OSDEP_minimize_uae();
 }
 
-static int native_dos_op (uae_u32 mode, uae_u32 p1, uae_u32 p2, uae_u32 p3)
-{
+/*
+ * What on earth is this meant to do?
+ */
+static int native_dos_op (uae_u32 mode, uae_u32 p1, uae_u32 p2, uae_u32 p3) {
 	TCHAR tmp[MAX_DPATH];
 	char *s;
 	int v, i;
@@ -422,6 +420,9 @@ static int native_dos_op (uae_u32 mode, uae_u32 p1, uae_u32 p2, uae_u32 p3)
 	return 0;
 }
 
+/*
+ *  All calltrap()'s seem to land here
+ */
 static uae_u32 uaelib_demux_common(uae_u32 ARG0, uae_u32 ARG1, uae_u32 ARG2, uae_u32 ARG3, uae_u32 ARG4, uae_u32 ARG5) {
 
 	write_log(_T("uaelib_demux_common() TRAP CALL: %d\n"), ARG0);
@@ -459,9 +460,9 @@ static uae_u32 uaelib_demux_common(uae_u32 ARG0, uae_u32 ARG1, uae_u32 ARG2, uae
 		case 81: return cfgfile_uaelib(ARG1, ARG2, ARG3, ARG4);
 		case 82: return cfgfile_uaelib_modify(ARG1, ARG2, ARG3, ARG4, ARG5);
 		case 83: currprefs.mmkeyboard = ARG1 ? 1 : 0; return currprefs.mmkeyboard;
-#ifdef DEBUGGER
+	#ifdef DEBUGGER
 		case 84: return mmu_init(ARG1, ARG2, ARG3);
-#endif
+	#endif
 		case 85: return native_dos_op(ARG1, ARG2, ARG3, ARG4);
 		case 86:
 		if (valid_address(ARG1, 1)) {
@@ -489,8 +490,10 @@ static uae_u32 uaelib_demux_common(uae_u32 ARG0, uae_u32 ARG1, uae_u32 ARG2, uae
 	return 0;
 }
 
-uae_u32 uaeboard_demux(uae_u32 *board)
-{
+/*
+ *
+ */
+uae_u32 uaeboard_demux(uae_u32 *board) {
 	uae_u32 arg0, arg1, arg2, arg3, arg4, arg5;
 
 	arg0 = do_get_mem_word((uae_u16*)&board[0]);
@@ -502,25 +505,31 @@ uae_u32 uaeboard_demux(uae_u32 *board)
 	return uaelib_demux_common(arg0, arg1, arg2, arg3, arg4, arg5);
 }
 
-static uae_u32 REGPARAM2 uaelib_demux2 (TrapContext *context)
-{
-#define ARG0 (get_long (m68k_areg (regs, 7) + 4))
-#define ARG1 (get_long (m68k_areg (regs, 7) + 8))
-#define ARG2 (get_long (m68k_areg (regs, 7) + 12))
-#define ARG3 (get_long (m68k_areg (regs, 7) + 16))
-#define ARG4 (get_long (m68k_areg (regs, 7) + 20))
-#define ARG5 (get_long (m68k_areg (regs, 7) + 24))
+/*
+ *
+ */
+static uae_u32 REGPARAM2 uaelib_demux2 (TrapContext *context) {
+	#define ARG0 (get_long (m68k_areg (regs, 7) + 4))
+	#define ARG1 (get_long (m68k_areg (regs, 7) + 8))
+	#define ARG2 (get_long (m68k_areg (regs, 7) + 12))
+	#define ARG3 (get_long (m68k_areg (regs, 7) + 16))
+	#define ARG4 (get_long (m68k_areg (regs, 7) + 20))
+	#define ARG5 (get_long (m68k_areg (regs, 7) + 24))
 
-#ifdef PICASSO96
-	if (ARG0 >= 16 && ARG0 <= 39)
-		return picasso_demux(ARG0, context);
-#endif
+	#ifdef PICASSO96
+		if (ARG0 >= 16 && ARG0 <= 39) {
+			return picasso_demux(ARG0, context);
+		}
+	#endif
 	return uaelib_demux_common(ARG0, ARG1, ARG2, ARG3, ARG4, ARG5);
 }
 
+/*
+ *
+ */
 extern int uaelib_debug;
-static uae_u32 REGPARAM2 uaelib_demux (TrapContext *context)
-{
+
+static uae_u32 REGPARAM2 uaelib_demux (TrapContext *context) {
 	uae_u32 v;
 	struct regstruct *r = &regs;
 
@@ -530,27 +539,27 @@ static uae_u32 REGPARAM2 uaelib_demux (TrapContext *context)
 		r->regs[0],r->regs[1],r->regs[2],r->regs[3],r->regs[4],r->regs[5],r->regs[6],r->regs[7],
 		r->regs[8],r->regs[9],r->regs[10],r->regs[11],r->regs[12],r->regs[13],r->regs[14],r->regs[15]);
 	v = uaelib_demux2 (context);
+
 	if (uaelib_debug)
 		write_log (_T("=%08x\n"), v);
+
 	return v;
 }
 
 /*
-* Installs the UAE LIBRARY
-*/
-void emulib_install (void)
-{
+ * Installs the UAE LIBRARY
+ */
+void emulib_install (void) {
 	uaecptr a;
-	if (!uae_boot_rom_type)
-		return;
+	if (!uae_boot_rom_type) { return; }
 	a = here ();
 	currprefs.mmkeyboard = 0;
 	org (rtarea_base + 0xFF60);
-#if 0
-	dw (0x4eb9);
-	dw ((rtarea_base >> 16) | get_word (rtarea_base + 36));
-	dw (get_word (rtarea_base + 38) + 12);
-#endif
+	#if 0
+		dw (0x4eb9);
+		dw ((rtarea_base >> 16) | get_word (rtarea_base + 36));
+		dw (get_word (rtarea_base + 38) + 12);
+	#endif
 	calltrap (deftrapres (uaelib_demux, 0, _T("uaelib_demux")));
 	dw (RTS);
 	org (a);

@@ -267,7 +267,8 @@ static void set_video_mode()
             g_window_resizable) {
         flags |= SDL_WINDOW_RESIZABLE;
     }
-    int x = g_window_x, y = g_window_y;
+
+    int x = 1920, y = 0;//g_window_x, y = g_window_y;
     int w = -1, h = -1;
 
     if (g_initial_input_grab) {
