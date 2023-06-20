@@ -1,0 +1,4 @@
+FROM LIB:c.o "uae-control.o"
+TO "uae-control"
+LIB LIB:sc.lib LIB:amiga.lib
+

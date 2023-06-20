@@ -330,6 +330,10 @@ static void set_video_mode()
         fs_log("setting (windowed) video mode %d %d\n", w, h);
     }
 
+    // no care setting above!
+    w = 1920;
+    h = 1080;
+
     if (fs_config_get_boolean("window_border") == 0) {
         fs_log("borderless window requested\n");
         flags |= SDL_WINDOW_BORDERLESS;

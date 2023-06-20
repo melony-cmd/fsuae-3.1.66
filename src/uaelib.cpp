@@ -83,10 +83,9 @@ static uae_u32 emulib_HostRunProgram (uaecptr program) {
 
 /*
  * emulib_AmigaRunProgram()
- * todo: has a buffer issue message needs a default value, if message length is 0
  */
 static uae_u32 emulib_AmigaRunProgram (uaecptr program) {
-	printf("emulib_AmigaRunProgram()\n");
+	//printf("emulib_AmigaRunProgram()\n");
 
 	int i;
 	int fd;
@@ -97,7 +96,7 @@ static uae_u32 emulib_AmigaRunProgram (uaecptr program) {
   fd = open(myfifo,O_RDONLY|O_NONBLOCK);
 	read(fd,message,512);
 
-	printf("msg:(%d) %s\n",strlen(message),message);
+	//printf("msg:(%d) %s\n",strlen(message),message);
 
 	close(fd);
 

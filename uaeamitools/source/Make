@@ -5,6 +5,8 @@ sc template.c opt link to template noicons
 sc uaectrl.c opt link to uaectrl noicons
 sc fsuae-hostrun.c opt link to fsuae-hostrun noicons
 sc fsuae-server.c opt link to fsuae-server noicons
+sc fsuae-insertdisk.c opt link to fsuae-insertdisk noicons
+sc fsuae-ejectdisk.c opt link to fsuae-ejectdisk noicons
 delete #?.o
 delete #?.lnk
 delete #?.info

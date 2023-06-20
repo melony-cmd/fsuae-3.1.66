@@ -1,0 +1,5 @@
+FROM LIB:c.o "fsuae-insertdisk.o"
+TO "fsuae-insertdisk"
+LIB LIB:sc.lib LIB:amiga.lib
+NOICONS
+

@@ -1,0 +1,4 @@
+copy fsuae-hostrun sys:bin/
+copy fsuae-server sys:bin/
+copy fsuae-insertdisk sys:bin/
+copy fsuae-ejectdisk sys:bin/

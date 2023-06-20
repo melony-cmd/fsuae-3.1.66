@@ -1,0 +1,5 @@
+FROM LIB:c.o "fsuae-ejectdisk.o"
+TO "fsuae-ejectdisk"
+LIB LIB:sc.lib LIB:amiga.lib
+NOICONS
+
