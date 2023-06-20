@@ -38,6 +38,7 @@
 
 /*
  *  Clipboard
+ *  NOT REQUIRED USE clipboard_sharing = 1/0 INSTEAD!
  */
 
 /*
