@@ -82,12 +82,28 @@ static uae_u32 emulib_HostRunProgram (uaecptr program) {
 }
 
 /*
-* Runs command on Amiga
-* - Hardest to implyment because fs-uae need to listen to messages from -any- application that sends a message to it
-*/
-static uae_u32 emulib_AmigaRunProgram (void) {
-	// read fs-uaemessage pipe 'if called'
+ * emulib_AmigaRunProgram()
+ */
+static uae_u32 emulib_AmigaRunProgram (uaecptr program) {
 	printf("emulib_AmigaRunProgram()\n");
+
+	int i;
+	int fd;
+	char *myfifo = (char *)"/tmp/fsuae-message";
+	char message[512];
+
+  mkfifo(myfifo,0666);
+  fd = open(myfifo,O_RDONLY|O_NONBLOCK);
+	read(fd,message,512);
+
+	printf("msg: %s\n");
+
+	close(fd);
+
+	for (i = 0; i < 256; i++) {
+		put_byte (program + i, message[i]);
+	}
+
 	return 0;
 }
 
@@ -182,7 +198,7 @@ static uae_u32 emulib_ChangeLanguage (uae_u32 which) {
 }
 
 /* The following ones don't work as we never realloc the arrays...
- * -> then why get me all excited by leaving the code behind hmmm?
+ * -> then why get me all excited by leaving the code behind hmmm?/*
  */
 /*
 * Changes chip memory size
@@ -485,7 +501,7 @@ static uae_u32 uaelib_demux_common(uae_u32 ARG0, uae_u32 ARG1, uae_u32 ARG2, uae
 		case 128: return emulib_GetHostClipboard();
 		case 129: return emulib_GetAmigaClipboard();
 		case 130: return emulib_HostRunProgram(ARG1);
-		case 131: return emulib_AmigaRunProgram();
+		case 131: return emulib_AmigaRunProgram(ARG1);
 	}
 	return 0;
 }

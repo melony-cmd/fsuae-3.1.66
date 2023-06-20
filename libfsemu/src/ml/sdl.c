@@ -1231,8 +1231,9 @@ int fs_ml_main_loop(void)
         fs_ml_event_loop();
         process_video_events();
 
-        // handle external messages
-        process_message_events();
+        // DEBUGGING handle external messages
+        // normally these are handled by emulib_AmigaRunProgram () in uaelib.c
+        // process_message_events();
 
         // Handled by SDL2
         // fs_ml_prevent_power_saving();

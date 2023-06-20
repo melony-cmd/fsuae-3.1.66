@@ -17,17 +17,16 @@
 #include "include/uae-control.h"
 #include "include/uae_pragmas.h"
 
-
-
 int main(int argc,char *argv[]){
+
+  char	buf[257];
+
   if (!strcmp(argv[1],"/?") || !strcmp(argv[1],"")) {
     printf("fsuae-server v0.1 (c) 2023 T.J.Roughton\n");
     printf("usage: start\n");
   } else {
-
-    while(1) {
-      AmigaRunProgram();
-    }
+    AmigaRunProgram((UBYTE *)&buf);
+    printf("msg:%s\n",buf);
   }
   return 0;
 }

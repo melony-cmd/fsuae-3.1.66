@@ -120,7 +120,7 @@ static int HostRunProgram(UBYTE *program) {
     return 0;
 }
 
-static int AmigaRunProgram(void) {
-    calltrap(131);
+static int AmigaRunProgram(UBYTE *program) {
+    calltrap(131, program);
     return 0;
 }
