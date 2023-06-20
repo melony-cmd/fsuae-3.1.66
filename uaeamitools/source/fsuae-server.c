@@ -9,6 +9,7 @@
  ***********************************************************/
 
 #include <clib/exec_protos.h>
+#include <clib/dos_protos.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <ctype.h>
@@ -25,8 +26,14 @@ int main(int argc,char *argv[]){
     printf("fsuae-server v0.1 (c) 2023 T.J.Roughton\n");
     printf("usage: start\n");
   } else {
-    AmigaRunProgram((UBYTE *)&buf);
-    printf("msg:%s\n",buf);
+    while (1) {
+      AmigaRunProgram((UBYTE *)&buf);
+      if(strcmp(buf,"null")!=0) {
+        printf("{%d} msg:(%d)[%s]\n",strcmp(buf,"null"),strlen(buf),buf);
+      }
+      Delay(50);
+      //printf("tick!\n");
+    }
   }
   return 0;
 }
