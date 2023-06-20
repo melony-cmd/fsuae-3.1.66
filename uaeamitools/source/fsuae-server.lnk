@@ -1,5 +1,4 @@
 FROM LIB:c.o "fsuae-server.o"
 TO "fsuae-server"
 LIB LIB:sc.lib LIB:amiga.lib
-NOICONS
 

@@ -1,0 +1,2 @@
+sc fsuae-server.c opt link to fsuae-server no icons
+fsuae-server start
