@@ -268,7 +268,8 @@ static void set_video_mode()
         flags |= SDL_WINDOW_RESIZABLE;
     }
 
-    int x = 1920, y = 0;//g_window_x, y = g_window_y;
+    //int x = 1920, y = 0;//
+    int x = g_window_x, y = g_window_y;
     int w = -1, h = -1;
 
     if (g_initial_input_grab) {
@@ -330,13 +331,14 @@ static void set_video_mode()
         fs_log("setting (windowed) video mode %d %d\n", w, h);
     }
 
-    // no care setting above!
-    w = 1920;
-    h = 1080;
-
     if (fs_config_get_boolean("window_border") == 0) {
         fs_log("borderless window requested\n");
         flags |= SDL_WINDOW_BORDERLESS;
+    }
+
+    if (fs_config_get_boolean("window_skip_taskbar") == 0){
+        fs_log("window skip taskbar requested\n");
+        flags |= SDL_WINDOW_SKIP_TASKBAR;
     }
 
     // special flags for command line usage
@@ -360,12 +362,7 @@ static void set_video_mode()
     fs_log("[SDL] CreateWindow(x=%d, y=%d, w=%d, h=%d, flags=%d)\n",
            x, y, w, h, flags);
 
-
-    //setting window_border = 1 in either config.fs-uae or by argument to ./fs-uae didn't appear to do anything
-    //thus fuck off!
-    //g_fs_ml_window = SDL_CreateWindow(g_window_title, x, y, w, h, flags);
-
-    g_fs_ml_window = SDL_CreateWindow(g_window_title, x, y, w, h, SDL_WINDOW_BORDERLESS|SDL_WINDOW_OPENGL);
+    g_fs_ml_window = SDL_CreateWindow(g_window_title, x, y, w, h, flags);
     if (g_initial_input_grab) {
         SDL_SetRelativeMouseMode(SDL_TRUE);
     }
