@@ -268,7 +268,8 @@ static void set_video_mode()
         flags |= SDL_WINDOW_RESIZABLE;
     }
 
-    //int x = 1920, y = 0;//
+
+
     int x = g_window_x, y = g_window_y;
     int w = -1, h = -1;
 
@@ -341,6 +342,11 @@ static void set_video_mode()
         flags |= SDL_WINDOW_SKIP_TASKBAR;
     }
 
+    if (fs_config_get_boolean("window_alwayontop") == 0) {
+        fs_log("window always on top\n");
+        flags |= SDL_WINDOW_ALWAYS_ON_TOP;
+    }
+
     // special flags for command line usage
     if (fs_config_get_boolean("window_hidden") == 1) {
         fs_log("hidden window requested\n");
@@ -361,6 +367,16 @@ static void set_video_mode()
     g_fs_ml_video_height = h;
     fs_log("[SDL] CreateWindow(x=%d, y=%d, w=%d, h=%d, flags=%d)\n",
            x, y, w, h, flags);
+
+    if (fs_config_get_boolean("force_window_x") == 1) {
+        fs_log("force window x position\n");
+        x = fs_config_get_int("window_x");
+    }
+
+    if (fs_config_get_boolean("force_window_y") == 1) {
+        fs_log("force window y position\n");
+        y = fs_config_get_int("window_y");
+    }
 
     g_fs_ml_window = SDL_CreateWindow(g_window_title, x, y, w, h, flags);
     if (g_initial_input_grab) {
