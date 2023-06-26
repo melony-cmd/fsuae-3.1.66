@@ -1,0 +1,26 @@
+#
+# Config Make File
+# T.J.Roughton 2023
+#
+
+CC=sc
+CFLAGS=OPT
+
+OBJS = Config.o ConfigTest.o
+
+TEST_OBJS = Config.o ConfigTest.o
+
+all: Config ConfigTest
+
+test: Config.o ConfigTest.o
+sc link to ConfigTest Config.o ConfigTest.o
+
+Config.o: Config.c
+ConfigTest.o: ConfigTest.c
+
+clean:
+  -delete force quiet Config ConfigTest *.o *.lnk SCOPTIONS
+
+<
+# DO NOT DELETE THIS LINE -- make depend depends on it.
+

@@ -1,0 +1,5 @@
+FROM LIB:c.o "fsuae-dropdisk.o"+"Config.o"
+TO "fsuae-dropdisk"
+LIB LIB:sc.lib LIB:amiga.lib
+NOICONS
+

@@ -1,0 +1,5 @@
+FROM LIB:c.o "lv.o"
+TO "lv"
+LIB LIB:sc.lib LIB:amiga.lib
+NOICONS
+

@@ -1,0 +1,2 @@
+Clear
+sc fsuae-dropdisk.c opt link to fsuae-dropdisk config.o noicons

@@ -1,0 +1,19 @@
+# FS-UAE configuration saved by FS-UAE Launcher
+# Last saved: 2023-06-27 03:23:03
+
+[fs-uae]
+amiga_model = A1000
+chip_memory = 512
+clipboard_sharing = 1
+cpu = 68000
+floppy_drive_count = 4
+floppy_drive_speed = 0
+floppy_drive_volume = 0
+floppy_drive_volume_empty = 0
+force_window_x = 1
+joystick_port_1 = none
+kickstart_file = /home/inner/Documents/FS-UAE/Roms/Kickstart v1.1 rev 32.34 (1986)(Commodore)(A1000)(PAL).rom
+monitor = right
+window_border = 1
+window_skip_taskbar = 1
+window_x = 1920
