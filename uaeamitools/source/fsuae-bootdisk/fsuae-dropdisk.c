@@ -272,19 +272,14 @@ void getfile_list(struct Window *win,struct FileRequester *filereq,struct List *
 /*----------------------------------------------------------------------------*/
 /* Insert Disk                                                                */
 /*  -- Inserts to the current emulation a disk                                */
-/* BUGS: for some reason button requires double click very odd!               */
 /*----------------------------------------------------------------------------*/
 void InsertFloppy(int selection,struct List *list){
 
-  char buffer[256];
   struct Node *node = NULL;
-
-  printf("Sel=%d\n",selection);
-
   node = get_node(list,selection);
 
-  sprintf(buffer,"%s",node->ln_Name);
-  printf("Insert %s into df0:",buffer);
+  printf("Insert %s into df0:\n",node->ln_Name);
+  InsertDisk((UBYTE *)node->ln_Name, 0 );
 
 }
 
@@ -561,7 +556,9 @@ int main (int argc,char *argv[])	{
 
                         case GID_INSERTDF0:
                           GT_GetGadgetAttrs (lvgad,win,NULL,GTLV_Selected,&num,TAG_END);
-                          InsertFloppy(num,&lvlist);
+                          if(num!=-1) {
+                            InsertFloppy(num,&lvlist);
+                          }
                         break;
 								      }
 								      break;
