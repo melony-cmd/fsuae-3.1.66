@@ -43,6 +43,7 @@
 char configfile [] = {"fsuae-dropdisk.cfg"};
 char amiga_tmpfolderpath[256];
 char host_tmpfolderpath[256];
+char asldefaultdir[256];
 int defaultPlatform;
 
 /*----------------------------------------------------------------------------*/
@@ -54,6 +55,10 @@ int defaultPlatform;
 #define GID_DELETE      1004
 #define GID_PLATFORM    1005
 #define GID_BOOT        1006
+#define GID_INSERTDF0   1007
+#define GID_INSERTDF1   1008
+#define GID_INSERTDF2   1009
+#define GID_INSERTDF3   1010
 
 /*----------------------------------------------------------------------------*/
 /* Macros                                                                     */
@@ -168,7 +173,8 @@ void free_list (struct List *list) {
 /* .fsuae configurations thus I'm leaving this code here as is in case I need */
 /* it in the future                                                           */
 /*----------------------------------------------------------------------------*/
-int getfsuae_configlist(void) {
+void getfsuae_configlist(void) {
+  /*
   struct FileInfoBlock fib;
   BPTR lock;
   int count = 0;
@@ -190,8 +196,8 @@ int getfsuae_configlist(void) {
       count++;
     } while (ExNext(lock,&fib));
   }
-
   UnLock(lock);
+  */
 }
 
 /*----------------------------------------------------------------------------*/
@@ -200,10 +206,9 @@ int getfsuae_configlist(void) {
    with .cfg files definitions.
 */
 /*----------------------------------------------------------------------------*/
-BOOL getfile_list(struct Window *win,struct FileRequester *filereq,struct List *list)	{
+void getfile_list(struct Window *win,struct FileRequester *filereq,struct List *list)	{
 
   int x;
-  long result;
 	char line[256];
   char prefbuffer[256];
   char devassign[256];
@@ -214,6 +219,7 @@ BOOL getfile_list(struct Window *win,struct FileRequester *filereq,struct List *
   if (AslRequestTags (filereq,
                       ASLFR_Window,win,
                       ASLFR_DoSaveMode,FALSE,
+                      ASL_Dir,asldefaultdir,
                       ASL_FuncFlags, FILF_MULTISELECT | FILF_PATGAD,
                       TAG_END)) {
 
@@ -237,7 +243,7 @@ BOOL getfile_list(struct Window *win,struct FileRequester *filereq,struct List *
 
           /* Must be a mounted device */
           printf("Search Config Sections for %s\n",devassign);          
-          result = ReadConfig(configfile,devassign,"Path",prefbuffer,256,"(unknown)");
+          ReadConfig(configfile,devassign,"Path",prefbuffer,256,"(unknown)");
           printf("Path: %s\n",prefbuffer);
 
           sprintf(line,"%s/%s/%s",prefbuffer,remdevassign,frargs[x].wa_Name);
@@ -261,6 +267,25 @@ BOOL getfile_list(struct Window *win,struct FileRequester *filereq,struct List *
   } else {
     printf("Failed to open asl window!\n");
   }
+}
+
+/*----------------------------------------------------------------------------*/
+/* Insert Disk                                                                */
+/*  -- Inserts to the current emulation a disk                                */
+/* BUGS: for some reason button requires double click very odd!               */
+/*----------------------------------------------------------------------------*/
+void InsertFloppy(int selection,struct List *list){
+
+  char buffer[256];
+  struct Node *node = NULL;
+
+  printf("Sel=%d\n",selection);
+
+  node = get_node(list,selection);
+
+  sprintf(buffer,"%s",node->ln_Name);
+  printf("Insert %s into df0:",buffer);
+
 }
 
 /*----------------------------------------------------------------------------*/
@@ -344,27 +369,22 @@ int main (int argc,char *argv[])	{
 	struct Gadget *gad;
 	struct Gadget *lvgad;
 	struct Gadget *cygad;
-	struct Gadget *strgad;
+	//struct Gadget *strgad;
 	struct FileRequester *filereq;
-
-
 	struct List lvlist;
-  struct List cylist;
 	struct Node *node = NULL;
 	struct Node *nextnode;
 	ULONG fontw,fonth;
 	ULONG winw,winh;
 	struct IntuiMessage *imsg;
-	ULONG size;
-	char *text;
 	ULONG num;
-  long result;
 
 	NewList (&lvlist);
   //getfsuae_configlist();  // SEE FUNCTION AS TO WHY!
   
-  result = ReadConfig(configfile,"SETTINGS","AmigaTempFolder",amiga_tmpfolderpath,256,"(unknown)");
-  result = ReadConfig(configfile,"SETTINGS","HostTempFolder",host_tmpfolderpath,256,"(unknown)");
+  ReadConfig(configfile,"SETTINGS","AmigaTempFolder",amiga_tmpfolderpath,256,"(unknown)");
+  ReadConfig(configfile,"SETTINGS","HostTempFolder",host_tmpfolderpath,256,"(unknown)");
+  ReadConfig(configfile,"SETTINGS","ASLDefaultDir",asldefaultdir,256,"#?");
 
   defaultPlatform = ReadConfigNumber(configfile,"SETTINGS","DefaultPlatform",3);
 
@@ -404,7 +424,7 @@ int main (int argc,char *argv[])	{
 		ng.ng_GadgetText = NULL;
 		ng.ng_GadgetID   = GID_STRING;
 		gad = CreateGadget (STRING_KIND,gad,&ng,GA_Disabled,TRUE,TAG_END);
-		strgad = gad;
+		//strgad = gad;
 
 		ng.ng_TopEdge    = winw;
 		ng.ng_Height    += winh;      /* including string height */
@@ -444,6 +464,15 @@ int main (int argc,char *argv[])	{
 		ng.ng_GadgetID   = GID_BOOT;
 		gad = CreateGadget (BUTTON_KIND,gad,&ng,TAG_END);
 
+    ng.ng_TopEdge   += ng.ng_Height + 4;
+    ng.ng_LeftEdge   = scr->WBorLeft + 4;
+		ng.ng_Width      = 51 * fontw + 8;
+		ng.ng_Height     = fonth + 6;
+		ng.ng_GadgetText = "Insert Disk DF0:";
+		ng.ng_GadgetID   = GID_INSERTDF0;
+		gad = CreateGadget (BUTTON_KIND,gad,&ng,TAG_END);
+
+
 	  filereq = AllocAslRequestTags (ASL_FileRequest,
     /*
 		  ASLFR_InitialLeftEdge,(scr->Width - winw) / 2,
@@ -457,9 +486,6 @@ int main (int argc,char *argv[])	{
 		  ASLFR_InitialTopEdge,(scr->Height - winh) / 2,
 		  ASLFR_InitialWidth,500,
 		  ASLFR_InitialHeight,500,
-
-
-
 		  TAG_END);
 
 		if (gad) {
@@ -503,19 +529,39 @@ int main (int argc,char *argv[])	{
                           getfile_list(win,filereq,&lvlist);
                           GT_SetGadgetAttrs (lvgad,win,NULL,GTLV_Labels,&lvlist,GTLV_Selected,-1,TAG_END);
                         break;
+
                         case GID_DELETE:
-                          printf("GID_DELETE\n");
+                          /* Doesn't currently work becuse 'node' is obvioulsy wrong! */
+         									if (node)	{
+                            printf("GID_DELETE\n");
+        										GT_SetGadgetAttrs (lvgad,win,NULL,GTLV_Labels,-1,TAG_END);
+				        						nextnode = GetSucc (node);
+								        		Remove (node);
+										        FreeVec (node);
+										        node = nextnode;
+										        if (node)	{
+											        GT_SetGadgetAttrs (lvgad,win,NULL,GTLV_Labels,&lvlist,TAG_END);
+        										} else {
+				        							GT_SetGadgetAttrs (lvgad,win,NULL,GTLV_Labels,&lvlist,GTLV_Selected,-1,TAG_END);
+										        }
+									        }
+
                         break;
+
                         case GID_PLATFORM:
                           //GT_GetGadgetAttrs (cygad,win,NULL,GTCY_Active,&num,TAG_END);
                           //printf("%s\n",cyPlatforms[num]);
                         break;
+
                         case GID_BOOT:
-
-
                           printf("GID_BOOT\n");
                           GT_GetGadgetAttrs (cygad,win,NULL,GTCY_Active,&num,TAG_END);
                           Boot(num,&lvlist);
+                        break;
+
+                        case GID_INSERTDF0:
+                          GT_GetGadgetAttrs (lvgad,win,NULL,GTLV_Selected,&num,TAG_END);
+                          InsertFloppy(num,&lvlist);
                         break;
 								      }
 								      break;
