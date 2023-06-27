@@ -131,7 +131,7 @@ int getCharPosition(const char *string, char searchChar)
 /*----------------------------------------------------------------------------*/
 /* Get Node
 /*----------------------------------------------------------------------------*/
-struct Node *get_node (struct List *list,ULONG num) {
+struct Node *Get_Node (struct List *list,ULONG num) {
 	struct Node *node;
 	ULONG i = 0;
 
@@ -147,7 +147,7 @@ struct Node *get_node (struct List *list,ULONG num) {
 /*----------------------------------------------------------------------------*/
 /* Number Node                                                                */
 /*----------------------------------------------------------------------------*/
-ULONG node_number (struct List *list,struct Node *node_to_find)	{
+ULONG Node_Number (struct List *list,struct Node *node_to_find)	{
 	struct Node *node;
   ULONG i = 0;
 
@@ -159,6 +159,36 @@ ULONG node_number (struct List *list,struct Node *node_to_find)	{
 	}
 	return (-1);
 }
+
+/*----------------------------------------------------------------------------*/
+/* Add Node                                                                   */
+/*----------------------------------------------------------------------------*/
+struct Node *Add_NodeName(struct List *list,char *name){
+  struct Node *node;
+
+  if (node = AllocVec (sizeof(struct Node) + strlen(name) + 1,MEMF_CLEAR)) {
+    node->ln_Name = (STRPTR)(node + 1);
+    strcpy (node->ln_Name,name);
+    AddTail (list,node);
+	} else {
+    return (NULL);    
+  }
+  return (node);
+}
+
+/*----------------------------------------------------------------------------*/
+/* Delete Node                                                                */
+/*----------------------------------------------------------------------------*/
+struct Node *Delete_Node(struct Node *node){
+  struct Node *nextnode;
+
+  nextnode = GetSucc (node);
+	Remove (node);
+	FreeVec (node);
+
+  return nextnode;
+}
+
 
 /*----------------------------------------------------------------------------*/
 /* Free List                                                                  */
@@ -211,15 +241,14 @@ void getfsuae_configlist(void) {
    with .cfg files definitions.
 */
 /*----------------------------------------------------------------------------*/
-void getfile_list(struct Window *win,struct FileRequester *filereq,struct List *list)	{
+void GetFile_List(struct Window *win,struct FileRequester *filereq,struct List *flist,struct List *dflist)	{
 
   int x;
-	char line[256];
+	char fn_name[256];
+	char pf_name[256];
   char prefbuffer[256];
   char devassign[256];
   char remdevassign[256];
-
-	struct Node *node;
 
   if (AslRequestTags (filereq,
                       ASLFR_Window,win,
@@ -251,13 +280,12 @@ void getfile_list(struct Window *win,struct FileRequester *filereq,struct List *
           ReadConfig(configfile,devassign,"Path",prefbuffer,256,"(unknown)");
           printf("Path: %s\n",prefbuffer);
 
-          sprintf(line,"%s/%s/%s",prefbuffer,remdevassign,frargs[x].wa_Name);
+          // FULL & Complete path to file
+          sprintf(fn_name,"%s",frargs[x].wa_Name);
+          sprintf(pf_name,"%s/%s/%s",prefbuffer,remdevassign,frargs[x].wa_Name);
 
-			    if (node = AllocVec (sizeof(struct Node) + strlen(line) + 1,MEMF_CLEAR)) {
-				    node->ln_Name = (STRPTR)(node + 1);
-				    strcpy (node->ln_Name,line);
-				    AddTail (list,node);
-			    }
+          Add_NodeName(flist,fn_name);              // ListView_Kind -- list (ONLY!)
+          Add_NodeName(dflist,pf_name);             // Path file List
         } else {
           /* Is not a mounted device, but local to where the we was launched from 
              we should do nothing with it, as we depend on a device: / assign:
@@ -286,13 +314,10 @@ void EjectFloppy(int gadid){
 /*  -- Inserts to the current emulation a disk                                */
 /*----------------------------------------------------------------------------*/
 void InsertFloppy(int selection,int gadid,struct List *list){
-
-  struct Node *node = NULL;
-  node = get_node(list,selection);
+  struct Node *node = Get_Node(list,selection);
 
   printf("Insert %s into df%d:\n",node->ln_Name,(gadid-2000));
   InsertDisk((UBYTE *)node->ln_Name, gadid-2000 );
-
 }
 
 /*----------------------------------------------------------------------------*/
@@ -308,7 +333,7 @@ int Boot(int platformnum,struct List *list){
   int fd_bytesread;
   int fd_write;
   char buffer[256];
-  struct Node *node = NULL;
+  struct Node *node;
   int ni = NULL;
 
   sprintf(cfgfile,"Configurations/%s.fs-uae",cyPlatforms[platformnum]);
@@ -330,10 +355,10 @@ int Boot(int platformnum,struct List *list){
       // now we get all the disks that (might be added in the listview and add them to the outbound configuration file!)
 
       //floppy_image_#
-			//if (node = get_node (list,0)) {
+			//if (node = Get_Node (list,0)) {
 			//GT_SetGadgetAttrs (strgad,win,NULL,GTST_String,node->ln_Name,GA_Disabled,FALSE,TAG_END);
 			//}
-      while(node = get_node(list,ni)) {
+      while(node = Get_Node(list,ni)) {
         if(ni==0) {
           sprintf(buffer,"floppy_drive_0 = %s\n",node->ln_Name);
           Write(fd_write,buffer,strlen(buffer));
@@ -376,18 +401,25 @@ int main (int argc,char *argv[])	{
 	struct Gadget *gad;
 	struct Gadget *lvgad;
 	struct Gadget *cygad;
-	//struct Gadget *strgad;
 	struct FileRequester *filereq;
-	struct List lvlist;
-	struct Node *node = NULL;
-	struct Node *nextnode;
+	
+  struct List lvlist;
+  struct List fplist;
+
+	struct Node *node;
 	ULONG fontw,fonth;
 	ULONG winw,winh;
 	struct IntuiMessage *imsg;
-	ULONG num;
+	ULONG num = NULL;
 
-	NewList (&lvlist);
-  //getfsuae_configlist();  // SEE FUNCTION AS TO WHY!
+	NewList (&lvlist);        // Filename list;
+                            // This list is for exclusive use of LISTVIEW_KIND (only!) do not refer to it to do anything functional.
+
+  NewList (&fplist);        // Path & Filename list;
+                            // Yes I know, I should only need ONE list for this
+                            // but since documenation is lacking in how to extend 'struct Node' or use my own 'struct MyNode'
+                            // and logical attempts to do so only produced a catatonic vomit of seizure inducing compile errors,
+                            // we will do it thus....
   
   ReadConfig(configfile,"SETTINGS","AmigaTempFolder",amiga_tmpfolderpath,256,"(unknown)");
   ReadConfig(configfile,"SETTINGS","HostTempFolder",host_tmpfolderpath,256,"(unknown)");
@@ -401,16 +433,6 @@ int main (int argc,char *argv[])	{
   printf("Argv[0] = %s\n",argv[0]);
 
 	if (scr = LockPubScreen (NULL))	{
-		winw = scr->Width  * 4 / 10;
-		winh = scr->Height * 8 / 10;
-
-		filereq = AllocAslRequestTags (ASL_FileRequest,
-			ASLFR_InitialLeftEdge,(scr->Width - winw) / 2,
-			ASLFR_InitialTopEdge,(scr->Height - winh) / 2,
-			ASLFR_InitialWidth,winw,
-			ASLFR_InitialHeight,winh,
-			TAG_END);
-
 		glist = NULL;
 		gad = CreateContext (&glist);
 
@@ -440,7 +462,6 @@ int main (int argc,char *argv[])	{
 		lvgad = gad;
 
     // ROW 1
-
     ng.ng_TopEdge   += ng.ng_Height + 4;
 		ng.ng_Width      = 11 * fontw + 13;
 		ng.ng_Height     = fonth + 6;
@@ -464,8 +485,6 @@ int main (int argc,char *argv[])	{
 		gad = CreateGadget (CYCLE_KIND,gad,&ng,GTCY_Labels,&cyPlatforms,TAG_END); // cyPlatforms
     cygad = gad;
 
-    // ROW 2
-
     ng.ng_TopEdge   += ng.ng_Height + 4;
     ng.ng_LeftEdge   = scr->WBorLeft + 4;
 		ng.ng_Width      = 52 * fontw + 1;
@@ -475,7 +494,6 @@ int main (int argc,char *argv[])	{
 		gad = CreateGadget (BUTTON_KIND,gad,&ng,TAG_END);
 
     // ROW 3
-
     ng.ng_TopEdge   += ng.ng_Height + 4;
     ng.ng_LeftEdge   = scr->WBorLeft + 4;
 		ng.ng_Width      = 11 * fontw + 13;
@@ -500,7 +518,6 @@ int main (int argc,char *argv[])	{
 		gad = CreateGadget (BUTTON_KIND,gad,&ng,TAG_END);
 
     // ROW 4
-
     ng.ng_TopEdge   += ng.ng_Height + 4;
     ng.ng_LeftEdge   = scr->WBorLeft + 4;
 		ng.ng_Width      = 11 * fontw + 13;
@@ -526,14 +543,6 @@ int main (int argc,char *argv[])	{
 
 
 	  filereq = AllocAslRequestTags (ASL_FileRequest,
-    /*
-		  ASLFR_InitialLeftEdge,(scr->Width - winw) / 2,
-		  ASLFR_InitialTopEdge,(scr->Height - winh) / 2,
-		  ASLFR_InitialWidth,winw,
-		  ASLFR_InitialHeight,winh,
-		  ASLFR_InitialLeftEdge,0,
-		  ASLFR_InitialTopEdge,0,
-    */
 		  ASLFR_InitialLeftEdge,(scr->Width - winw) / 2,
 		  ASLFR_InitialTopEdge,(scr->Height - winh) / 2,
 		  ASLFR_InitialWidth,500,
@@ -574,24 +583,24 @@ int main (int argc,char *argv[])	{
 								      switch (gad->GadgetID) {
 								        case GID_LIST:
 									        GT_GetGadgetAttrs (lvgad,win,NULL,GTLV_Selected,&num,TAG_END);
-                          node = get_node (&lvlist,num);
 									      break;
 
                         case GID_ADD:
                           printf("GID_ADD\n");
-                          getfile_list(win,filereq,&lvlist);
+                          GetFile_List(win,filereq,&lvlist,&fplist);
                           GT_SetGadgetAttrs (lvgad,win,NULL,GTLV_Labels,&lvlist,GTLV_Selected,-1,TAG_END);
                         break;
 
                         case GID_DELETE:
                           printf("GID_DELETE\n");
+                          node = Get_Node (&lvlist,num);
          									if (node)	{
+                            Delete_Node(Get_Node(&fplist,num));
+
         										GT_SetGadgetAttrs (lvgad,win,NULL,GTLV_Labels,-1,TAG_END);
-				        						nextnode = GetSucc (node);
-								        		Remove (node);
-										        FreeVec (node);
-										        node = nextnode;
-										        if (node)	{
+										        node = Delete_Node(node);
+										        
+                            if (node)	{
 											        GT_SetGadgetAttrs (lvgad,win,NULL,GTLV_Labels,&lvlist,TAG_END);
         										} else {
 				        							GT_SetGadgetAttrs (lvgad,win,NULL,GTLV_Labels,&lvlist,GTLV_Selected,-1,TAG_END);
@@ -602,6 +611,7 @@ int main (int argc,char *argv[])	{
                         case GID_CLEAR:
                           GT_SetGadgetAttrs (lvgad,win,NULL,GTLV_Labels,-1,TAG_END);
                           free_list (&lvlist);
+                          free_list (&fplist);
                           GT_SetGadgetAttrs (lvgad,win,NULL,GTLV_Labels,&lvlist,GTLV_Selected,-1,TAG_END);
                         break;
 
@@ -613,7 +623,7 @@ int main (int argc,char *argv[])	{
                         case GID_BOOT:
                           printf("GID_BOOT\n");
                           GT_GetGadgetAttrs (cygad,win,NULL,GTCY_Active,&num,TAG_END);
-                          Boot(num,&lvlist);
+                          Boot(num,&fplist);
                         break;
 
                         case GID_INSERTDF0:
@@ -665,6 +675,9 @@ int main (int argc,char *argv[])	{
 		    UnlockPubScreen (NULL,scr);
       }
 	}
-	free_list (&lvlist);  
+	
+  free_list (&lvlist);  
+  free_list (&fplist);  
+
 	return (0);
 }
