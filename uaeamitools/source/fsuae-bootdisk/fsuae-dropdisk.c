@@ -8,7 +8,6 @@
 /* - Solution                                                                 */
 /* Need some tomfoolery configuration file that replaces Dev/Assign with the  */
 /* host path, or it will never find anything to insert as a disk              */
-/* * Agrovation re-inventing the wheel so we can read configuration files!?#! */
 /*                                                                            */
 /*----------------------------------------------------------------------------*/
 
@@ -40,11 +39,6 @@
 /* 3rd Party Includes                                                         */
 /*----------------------------------------------------------------------------*/
 #include "config.h"
-char configfile [] = {"fsuae-dropdisk.cfg"};
-char amiga_tmpfolderpath[256];
-char host_tmpfolderpath[256];
-char asldefaultdir[256];
-int defaultPlatform;
 
 /*----------------------------------------------------------------------------*/
 /* Gadget IDs                                                                 */
@@ -94,6 +88,12 @@ static const char *cyPlatforms[] = {"A1000",
 	                                  "A1200",
 	                                  "Custom",
 	                                  NULL};
+
+char configfile [] = {"fsuae-dropdisk.cfg"};
+char amiga_tmpfolderpath[256];
+char host_tmpfolderpath[256];
+char asldefaultdir[256];
+int defaultPlatform;
 
 /*----------------------------------------------------------------------------*/
 /* Copy part of a string to another
