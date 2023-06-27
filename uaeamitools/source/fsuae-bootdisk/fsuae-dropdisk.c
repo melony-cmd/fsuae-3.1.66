@@ -165,7 +165,6 @@ ULONG node_number (struct List *list,struct Node *node_to_find)	{
 /*----------------------------------------------------------------------------*/
 void free_list (struct List *list) {
 	struct Node *node;
-
 	while (node = RemHead (list)) {
 		FreeVec (node);
   }
@@ -575,6 +574,7 @@ int main (int argc,char *argv[])	{
 								      switch (gad->GadgetID) {
 								        case GID_LIST:
 									        GT_GetGadgetAttrs (lvgad,win,NULL,GTLV_Selected,&num,TAG_END);
+                          node = get_node (&lvlist,num);
 									      break;
 
                         case GID_ADD:
@@ -584,9 +584,8 @@ int main (int argc,char *argv[])	{
                         break;
 
                         case GID_DELETE:
-                          /* Doesn't currently work becuse 'node' is obvioulsy wrong! */
+                          printf("GID_DELETE\n");
          									if (node)	{
-                            printf("GID_DELETE\n");
         										GT_SetGadgetAttrs (lvgad,win,NULL,GTLV_Labels,-1,TAG_END);
 				        						nextnode = GetSucc (node);
 								        		Remove (node);
@@ -598,7 +597,12 @@ int main (int argc,char *argv[])	{
 				        							GT_SetGadgetAttrs (lvgad,win,NULL,GTLV_Labels,&lvlist,GTLV_Selected,-1,TAG_END);
 										        }
 									        }
+                        break;
 
+                        case GID_CLEAR:
+                          GT_SetGadgetAttrs (lvgad,win,NULL,GTLV_Labels,-1,TAG_END);
+                          free_list (&lvlist);
+                          GT_SetGadgetAttrs (lvgad,win,NULL,GTLV_Labels,&lvlist,GTLV_Selected,-1,TAG_END);
                         break;
 
                         case GID_PLATFORM:
