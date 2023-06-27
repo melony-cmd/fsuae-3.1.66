@@ -53,12 +53,18 @@ int defaultPlatform;
 #define GID_STRING      1002
 #define GID_ADD         1003
 #define GID_DELETE      1004
-#define GID_PLATFORM    1005
-#define GID_BOOT        1006
-#define GID_INSERTDF0   1007
-#define GID_INSERTDF1   1008
-#define GID_INSERTDF2   1009
-#define GID_INSERTDF3   1010
+#define GID_CLEAR       1005
+#define GID_PLATFORM    1006
+#define GID_BOOT        1007
+
+#define GID_INSERTDF0   2000
+#define GID_INSERTDF1   2001
+#define GID_INSERTDF2   2002
+#define GID_INSERTDF3   2003
+#define GID_EJECTDF0    3000
+#define GID_EJECTDF1    3001
+#define GID_EJECTDF2    3002
+#define GID_EJECTDF3    3003
 
 /*----------------------------------------------------------------------------*/
 /* Macros                                                                     */
@@ -259,8 +265,6 @@ void getfile_list(struct Window *win,struct FileRequester *filereq,struct List *
              to repath the disk.
           */
         }
-
-
       }      
     }
 
@@ -273,13 +277,22 @@ void getfile_list(struct Window *win,struct FileRequester *filereq,struct List *
 /* Insert Disk                                                                */
 /*  -- Inserts to the current emulation a disk                                */
 /*----------------------------------------------------------------------------*/
-void InsertFloppy(int selection,struct List *list){
+void EjectFloppy(int gadid){
+  printf("Eject df%d:\n",(gadid-3000));
+  EjectDisk( gadid-3000 );
+}
+
+/*----------------------------------------------------------------------------*/
+/* Insert Disk                                                                */
+/*  -- Inserts to the current emulation a disk                                */
+/*----------------------------------------------------------------------------*/
+void InsertFloppy(int selection,int gadid,struct List *list){
 
   struct Node *node = NULL;
   node = get_node(list,selection);
 
-  printf("Insert %s into df0:\n",node->ln_Name);
-  InsertDisk((UBYTE *)node->ln_Name, 0 );
+  printf("Insert %s into df%d:\n",node->ln_Name,(gadid-2000));
+  InsertDisk((UBYTE *)node->ln_Name, gadid-2000 );
 
 }
 
@@ -430,7 +443,7 @@ int main (int argc,char *argv[])	{
     // ROW 1
 
     ng.ng_TopEdge   += ng.ng_Height + 4;
-		ng.ng_Width      = 16 * fontw + 8;
+		ng.ng_Width      = 11 * fontw + 13;
 		ng.ng_Height     = fonth + 6;
 		ng.ng_GadgetText = "Add";
 		ng.ng_GadgetID   = GID_ADD;
@@ -438,33 +451,78 @@ int main (int argc,char *argv[])	{
 
     ng.ng_LeftEdge  += ng.ng_Width + 4;
 		ng.ng_GadgetText = "Delete";
-
-
 		ng.ng_GadgetID   = GID_DELETE;
 		gad = CreateGadget (BUTTON_KIND,gad,&ng,TAG_END);
 
+    ng.ng_LeftEdge  += ng.ng_Width + 4;
+		ng.ng_GadgetText = "Clear";
+		ng.ng_GadgetID   = GID_CLEAR;
+		gad = CreateGadget (BUTTON_KIND,gad,&ng,TAG_END);
 
     ng.ng_LeftEdge  += ng.ng_Width + 4;
 		ng.ng_GadgetID   = GID_PLATFORM;
     ng.ng_GadgetText = "";
 		gad = CreateGadget (CYCLE_KIND,gad,&ng,GTCY_Labels,&cyPlatforms,TAG_END); // cyPlatforms
     cygad = gad;
+
     // ROW 2
 
     ng.ng_TopEdge   += ng.ng_Height + 4;
     ng.ng_LeftEdge   = scr->WBorLeft + 4;
-		ng.ng_Width      = 51 * fontw + 8;
+		ng.ng_Width      = 52 * fontw + 1;
 		ng.ng_Height     = fonth + 6;
 		ng.ng_GadgetText = "Boot";
 		ng.ng_GadgetID   = GID_BOOT;
 		gad = CreateGadget (BUTTON_KIND,gad,&ng,TAG_END);
 
+    // ROW 3
+
     ng.ng_TopEdge   += ng.ng_Height + 4;
     ng.ng_LeftEdge   = scr->WBorLeft + 4;
-		ng.ng_Width      = 51 * fontw + 8;
+		ng.ng_Width      = 11 * fontw + 13;
 		ng.ng_Height     = fonth + 6;
-		ng.ng_GadgetText = "Insert Disk DF0:";
+		ng.ng_GadgetText = "DF0:";
 		ng.ng_GadgetID   = GID_INSERTDF0;
+		gad = CreateGadget (BUTTON_KIND,gad,&ng,TAG_END);
+
+    ng.ng_LeftEdge  += ng.ng_Width + 4;
+		ng.ng_GadgetText = "DF1:";
+		ng.ng_GadgetID   = GID_INSERTDF1;
+		gad = CreateGadget (BUTTON_KIND,gad,&ng,TAG_END);
+
+    ng.ng_LeftEdge  += ng.ng_Width + 4;
+		ng.ng_GadgetText = "DF2:";
+		ng.ng_GadgetID   = GID_INSERTDF2;
+		gad = CreateGadget (BUTTON_KIND,gad,&ng,TAG_END);
+
+    ng.ng_LeftEdge  += ng.ng_Width + 4;
+		ng.ng_GadgetText = "DF3:";
+		ng.ng_GadgetID   = GID_INSERTDF3;
+		gad = CreateGadget (BUTTON_KIND,gad,&ng,TAG_END);
+
+    // ROW 4
+
+    ng.ng_TopEdge   += ng.ng_Height + 4;
+    ng.ng_LeftEdge   = scr->WBorLeft + 4;
+		ng.ng_Width      = 11 * fontw + 13;
+		ng.ng_Height     = fonth + 6;
+		ng.ng_GadgetText = "Eject";
+		ng.ng_GadgetID   = GID_EJECTDF0;
+		gad = CreateGadget (BUTTON_KIND,gad,&ng,TAG_END);
+
+    ng.ng_LeftEdge  += ng.ng_Width + 4;
+		ng.ng_GadgetText = "Eject";
+		ng.ng_GadgetID   = GID_EJECTDF1;
+		gad = CreateGadget (BUTTON_KIND,gad,&ng,TAG_END);
+
+    ng.ng_LeftEdge  += ng.ng_Width + 4;
+		ng.ng_GadgetText = "Eject";
+		ng.ng_GadgetID   = GID_EJECTDF2;
+		gad = CreateGadget (BUTTON_KIND,gad,&ng,TAG_END);
+
+    ng.ng_LeftEdge  += ng.ng_Width + 4;
+		ng.ng_GadgetText = "Eject";
+		ng.ng_GadgetID   = GID_EJECTDF3;
 		gad = CreateGadget (BUTTON_KIND,gad,&ng,TAG_END);
 
 
@@ -555,10 +613,20 @@ int main (int argc,char *argv[])	{
                         break;
 
                         case GID_INSERTDF0:
+                        case GID_INSERTDF1:
+                        case GID_INSERTDF2:
+                        case GID_INSERTDF3:
                           GT_GetGadgetAttrs (lvgad,win,NULL,GTLV_Selected,&num,TAG_END);
                           if(num!=-1) {
-                            InsertFloppy(num,&lvlist);
+                            InsertFloppy(num,gad->GadgetID,&lvlist);
                           }
+                        break;
+
+                        case GID_EJECTDF0:
+                        case GID_EJECTDF1:
+                        case GID_EJECTDF2:
+                        case GID_EJECTDF3:
+                          EjectFloppy(gad->GadgetID);
                         break;
 								      }
 								      break;
