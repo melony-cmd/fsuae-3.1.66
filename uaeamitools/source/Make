@@ -1,6 +1,7 @@
 delete #?.o
 delete #?.lnk
 delete #?.info
+
 sc template.c opt link to template noicons
 sc uaectrl.c opt link to uaectrl noicons
 sc fsuae-hostrun.c opt link to fsuae-hostrun noicons
@@ -11,6 +12,36 @@ sc fsuae-hardreboot.c opt link to fsuae-hardreboot noicons
 sc fsuae-softreboot.c opt link to fsuae-softreboot noicons
 sc fsuae-disablesound.c opt link to fsuae-disablesound noicons
 sc fsuae-enablesound.c opt link to fsuae-enablesound noicons
+sc fsuae-debugmode.c opt link to fsuae-debug noicons
+sc fsuae-enablejoystick.c opt link to fsuae-enablejoystick noicons
+sc fsuae-disablejoystick.c opt link to fsuae-disablejoystick noicons
+sc fsuae-setframerate.c opt link to fsuae-setframerate noicons
+sc fsuae-changechip.c opt link to fsuae-changechip noicons
+sc fsuae-changefast.c opt link to fsuae-changefast noicons
+sc fsuae-changeslow.c opt link to fsuae-changeslow noicons
+sc fsuae-changelanguage.c opt link to fsuae-changelanguage noicons
+sc fsuae-exitemu.c opt link to fsuae-exitemu noicons
+sc fsuae-getdisk.c opt link to fsuae-getdisk noicons
+
 delete #?.o
 delete #?.lnk
 delete #?.info
+
+copy fsuae-hostrun sys:bin/
+copy fsuae-server sys:bin/
+copy fsuae-insertdisk sys:bin/
+copy fsuae-ejectdisk sys:bin/
+copy fsuae-hardreboot sys:bin/
+copy fsuae-softreboot sys:bin/
+copy fsuae-enablesound sys:bin/
+copy fsuae-disablesound sys:bin/
+copy fsuae-debug sys:bin/
+copy fsuae-enablejoystick sys:bin/
+copy fsuae-disablejoystick sys:bin/
+copy fsuae-setframerate sys:bin/
+copy fsuae-changechip sys:bin/
+copy fsuae-changefast sys:bin/
+copy fsuae-changeslow sys:bin/
+copy fsuae-changelanguage sys:bin/
+copy fsuae-exitemu sys:bin/
+copy fsuae-getdisk sys:bin/
