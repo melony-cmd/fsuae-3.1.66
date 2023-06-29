@@ -242,7 +242,6 @@ void getfsuae_configlist(void) {
 */
 /*----------------------------------------------------------------------------*/
 void GetFile_List(struct Window *win,struct FileRequester *filereq,struct List *flist,struct List *dflist)	{
-
   int x;
 	char fn_name[256];
 	char pf_name[256];
@@ -556,8 +555,8 @@ int main (int argc,char *argv[])	{
 					WA_Title,"FSUAE DropDisk v0.1",
 					WA_Width,winw,
 					WA_Height,winh,
-					WA_Left,(scr->Width - winw) / 2,
-					WA_Top,(scr->Height - winh) / 2,
+					WA_Left,(scr->Width - winw) / 3,
+					WA_Top,(scr->Height - winh) / 3,
 					WA_Flags,WFLG_CLOSEGADGET | WFLG_DRAGBAR | WFLG_DEPTHGADGET | WFLG_ACTIVATE,
 					WA_IDCMP,IDCMP_CLOSEWINDOW | IDCMP_VANILLAKEY | IDCMP_REFRESHWINDOW | BUTTONIDCMP | STRINGIDCMP | LISTVIEWIDCMP,
 					WA_PubScreen,scr,
@@ -632,7 +631,7 @@ int main (int argc,char *argv[])	{
                         case GID_INSERTDF3:
                           GT_GetGadgetAttrs (lvgad,win,NULL,GTLV_Selected,&num,TAG_END);
                           if(num!=-1) {
-                            InsertFloppy(num,gad->GadgetID,&lvlist);
+                            InsertFloppy(num,gad->GadgetID,&fplist);
                           }
                         break;
 

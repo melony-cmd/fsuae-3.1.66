@@ -7,6 +7,10 @@ sc fsuae-hostrun.c opt link to fsuae-hostrun noicons
 sc fsuae-server.c opt link to fsuae-server noicons
 sc fsuae-insertdisk.c opt link to fsuae-insertdisk noicons
 sc fsuae-ejectdisk.c opt link to fsuae-ejectdisk noicons
+sc fsuae-hardreboot.c opt link to fsuae-hardreboot noicons
+sc fsuae-softreboot.c opt link to fsuae-softreboot noicons
+sc fsuae-disablesound.c opt link to fsuae-disablesound noicons
+sc fsuae-enablesound.c opt link to fsuae-enablesound noicons
 delete #?.o
 delete #?.lnk
 delete #?.info
