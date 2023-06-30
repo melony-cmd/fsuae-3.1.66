@@ -4,8 +4,8 @@
 
 static int (*calltrap)(...) = (int (*)(...))0xF0FF60;
 
-static int GetVersion(void) {
-    calltrap (0);
+static int GetVersion(UBYTE *version) {
+    calltrap (0, version);
     return 0;
 }
 

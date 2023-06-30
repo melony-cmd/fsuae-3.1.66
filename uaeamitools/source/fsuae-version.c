@@ -1,7 +1,7 @@
 /***********************************************************
  * UAE - The U*nix Amiga Emulator                          *
  *                                                         *
- * template -- Emulator Control from Inside Emulation *
+ * fsuae-version -- Emulator Control from Inside Emulation *
  *  (c) 2023 T.J.Roughton <melonytr@gmail.com>             *
  *                                                         *
  * Version 0.x                                             *
@@ -22,8 +22,14 @@
 
 int main(int argc,char *argv[]){
 
-  char ver = GetVersion();
-  printf("Version = %s\n",ver);
+  char version[256];
+
+  // Well we know why this isn't working no arguments to version to fill data or anything returned because it
+  // will always be zero!;
+  // Internally it results in 50528256 which is either a version number / address of a string!? who knows.
+
+  GetVersion(&version);
+  printf("Version = %s\n",version);
 
   return 0;
 }

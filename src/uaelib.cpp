@@ -1,9 +1,11 @@
 /*
 * UAE - The U*nix Amiga Emulator
 *
-* UAE Library v0.3.1
+* UAE Library v0.3.2
 *
 * (c) 1996 Tauno Taipaleenmaki <tataipal@raita.oulu.fi>
+* -- and 27 YEARS LATER!
+* (c) 2023 T.J.Roughton <melonytr@gmail.com>
 *
 * Change UAE parameters and other stuff from inside the emulation.
 */
@@ -112,8 +114,17 @@ static uae_u32 emulib_AmigaRunProgram (uaecptr program) {
 
 /*
 * Returns UAE Version
+* 	FIXED: Now actually does something more than the nothing it did for 27 years!
 */
-static uae_u32 emulib_GetVersion (void) {
+static uae_u32 emulib_GetVersion (uaecptr nversion) {
+	int i;
+	char buf_version[16];
+
+	sprintf(buf_version,"%d.%d.%d",UAEMAJOR,UAEMINOR,UAESUBREV);
+	//printf("%s\n",buf_version);
+	for (i = 0; i < strlen(buf_version); i++) {
+		put_byte (nversion + i, buf_version[i]);
+	}
 	return version;
 }
 
@@ -447,7 +458,7 @@ static uae_u32 uaelib_demux_common(uae_u32 ARG0, uae_u32 ARG1, uae_u32 ARG2, uae
 	write_log(_T("uaelib_demux_common() TRAP CALL: %d\n"), ARG0);
 
 	switch (ARG0) {
-		case 0: return emulib_GetVersion();
+		case 0: return emulib_GetVersion(ARG1);
 		case 1: return emulib_GetUaeConfig(ARG1);
 		case 2: return emulib_SetUaeConfig(ARG1);
 		case 3: return emulib_HardReset();
