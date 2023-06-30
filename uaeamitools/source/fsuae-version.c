@@ -22,14 +22,10 @@
 
 int main(int argc,char *argv[]){
 
-  char version[256];
-
-  // Well we know why this isn't working no arguments to version to fill data or anything returned because it
-  // will always be zero!;
-  // Internally it results in 50528256 which is either a version number / address of a string!? who knows.
+  char version[16];
 
   GetVersion(&version);
-  printf("Version = %s\n",version);
+  printf("UAE v%s\n",version);
 
   return 0;
 }

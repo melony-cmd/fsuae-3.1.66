@@ -38,29 +38,7 @@
 #include "picasso96.h"
 #include "filesys.h"
 
-/*
- *  Clipboard
- *  NOT REQUIRED USE clipboard_sharing = 1/0 INSTEAD!
- */
-
-/*
-* HOST Clipboard to UAE Enviroment
-*/
-static uae_u32 emulib_GetHostClipboard (void) {
-
-	printf("emulib_GetHostClipboard()\n");
-	printf("%s\n",SDL_GetClipboardText());
-
-	return 0;
-}
-
-/*
-* UAE Clipboard !Text! to Host Enviroment
-*/
-static uae_u32 emulib_GetAmigaClipboard (void) {
-	printf("emulib_GetUAEClipboard()\n");
-	return 0;
-}
+#define LIBUAEVERSION "0.3.2"
 
 /*
 * Runs command on host
@@ -110,6 +88,21 @@ static uae_u32 emulib_AmigaRunProgram (uaecptr program) {
 	}
 
 	return 0;
+}
+
+/*
+* Returns UaeLib Version
+*/
+static uae_u32 emulib_GetUAELibVersion (uaecptr nversion) {
+	int i;
+	char buf_version[16];
+
+	sprintf(buf_version,"%s",LIBUAEVERSION);
+	//printf("%s\n",buf_version);
+	for (i = 0; i < strlen(buf_version); i++) {
+		put_byte (nversion + i, buf_version[i]);
+	}
+	return version;
 }
 
 /*
@@ -511,9 +504,7 @@ static uae_u32 uaelib_demux_common(uae_u32 ARG0, uae_u32 ARG1, uae_u32 ARG2, uae
 		}
 
 		/* keep away from whatever is going above ;) */
-
-		case 128: return emulib_GetHostClipboard();
-		case 129: return emulib_GetAmigaClipboard();
+		case 128: return emulib_GetUAELibVersion(ARG1);
 		case 130: return emulib_HostRunProgram(ARG1);
 		case 131: return emulib_AmigaRunProgram(ARG1);
 	}

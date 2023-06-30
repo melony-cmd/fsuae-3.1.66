@@ -104,16 +104,10 @@ static int DebugFunc(void) {
   That is why the code style changes below :)
  */
 
-static int GetHostClipboard(void) {
-    calltrap(128);
+static int GetUAELibVersion(UBYTE *version) {
+    calltrap(128, version);
     return 0;
 }
-
-static int GetAmigaClipboard(void) {
-    calltrap(129);
-    return 0;
-}
-
 
 static int HostRunProgram(UBYTE *program) {
     calltrap(130, program);
