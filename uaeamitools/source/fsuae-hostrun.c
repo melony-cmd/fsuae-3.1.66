@@ -1,7 +1,8 @@
 /***********************************************************
  * UAE - The U*nix Amiga Emulator                          *
  *                                                         *
- * fsuae-hostrun -- Emulator Control from Inside Emulation *
+ * fsuae-hostrun                                           *
+ *               -- Emulator Control from Inside Emulation *
  *  (c) 2023 T.J.Roughton <melonytr@gmail.com>             *
  *                                                         *
  * Version 0.x                                             *

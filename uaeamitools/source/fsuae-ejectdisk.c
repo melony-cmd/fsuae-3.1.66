@@ -1,7 +1,8 @@
 /***********************************************************
  * UAE - The U*nix Amiga Emulator                          *
  *                                                         *
- * fsuae-ejectdisk -- EmuControl from Inside Emulation     *
+ * fsuae-ejectdisk                                         *
+ *               -- Emulator Control from Inside Emulation *
  *  (c) 2023 T.J.Roughton <melonytr@gmail.com>             *
  *                                                         *
  * Version 0.x                                             *
