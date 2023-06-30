@@ -109,6 +109,11 @@ static int GetUAELibVersion(UBYTE *version) {
     return 0;
 }
 
+static int SetHostScreenSaver(UBYTE *state) {
+    calltrap(129, state);
+    return 0;
+}
+
 static int HostRunProgram(UBYTE *program) {
     calltrap(130, program);
     return 0;

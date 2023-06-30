@@ -24,6 +24,7 @@ sc fsuae-exitemu.c opt link to fsuae-exitemu noicons
 sc fsuae-getdisk.c opt link to fsuae-getdisk noicons
 sc fsuae-version.c opt link to fsuae-version noicons
 sc fsuae-libversion.c opt link to fsuae-libversion noicons
+sc fsuae-setscreensaver.c opt link to fsuae-setscreensaver noicons
 
 delete #?.o
 delete #?.lnk
@@ -48,4 +49,5 @@ copy fsuae-changelanguage sys:bin/
 copy fsuae-exitemu sys:bin/
 copy fsuae-getdisk sys:bin/
 copy fsuae-version sys:bin/
-copy fsuae-uaelibversion sys:bin/
+copy fsuae-libversion sys:bin/
+copy fsuae-setscreensaver sys:bin/

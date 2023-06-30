@@ -1,5 +1,0 @@
-FROM LIB:c.o "fsuae-libversion.o"
-TO "fsuae-libversion"
-LIB LIB:sc.lib LIB:amiga.lib
-NOICONS
-

@@ -59,8 +59,6 @@ int main() {
 		printf("  7) Change language      (Currently : %s)\n", langs[config.keyboard]);
 		printf("  8) Eject a disk\n");
 		printf("  9) Insert a disk\n\n");
-		printf("128) GetHostClipboard\n");
-		printf("129) GetAmigaClipboard\n");
 		printf("130) Run program on Host\n");
 		printf("131) Run program on Amiga (testing purposes)\n");
 		printf("99) Exit UAE-Control\n\n");
@@ -164,14 +162,6 @@ int main() {
 
 			case 99:
 				quit = 1;
-				break;
-
-			case 128:
-				GetHostClipboard();
-				break;
-
-			case 129:
-				GetAmigaClipboard();
 				break;
 
 			case 130:

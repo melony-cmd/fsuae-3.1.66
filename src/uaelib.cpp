@@ -63,6 +63,29 @@ static uae_u32 emulib_HostRunProgram (uaecptr program) {
 }
 
 /*
+* Disable/Enable Screen Saver (SDL)
+*/
+static uae_u32 emulib_HostScreenSaver(uaecptr state) {
+
+	if(state==0) {
+		SDL_DisableScreenSaver();
+	}
+
+	if(state==1) {
+		SDL_EnableScreenSaver();
+	}
+
+	if(SDL_IsScreenSaverEnabled()==SDL_TRUE){
+			printf("ScreenSave - Enabled\n");
+	} else {
+			printf("ScreenSave - Disabled\n");
+	}
+
+	return 0;
+}
+
+
+/*
  * emulib_AmigaRunProgram()
  */
 static uae_u32 emulib_AmigaRunProgram (uaecptr program) {
@@ -505,6 +528,7 @@ static uae_u32 uaelib_demux_common(uae_u32 ARG0, uae_u32 ARG1, uae_u32 ARG2, uae
 
 		/* keep away from whatever is going above ;) */
 		case 128: return emulib_GetUAELibVersion(ARG1);
+		case 129: return emulib_HostScreenSaver(ARG1);
 		case 130: return emulib_HostRunProgram(ARG1);
 		case 131: return emulib_AmigaRunProgram(ARG1);
 	}
