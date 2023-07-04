@@ -23,6 +23,7 @@
 #include <assert.h>
 #include <string.h>
 #include <X11/Xlib.h>
+#include <X11/Xatom.h>
 
 #include "options.h"
 #include "uae.h"
@@ -39,6 +40,131 @@
 #include "filesys.h"
 
 #define LIBUAEVERSION "0.3.2"
+
+/*
+ *  Get_X11WindowList()
+ */
+Window *uaelib_x11winlist;
+
+Window *Get_WindowList (Display *disp, unsigned long *len);
+char *Get_WindowName (Display *disp, Window win);
+
+/* -- */
+Window *Get_WindowList (Display *disp, unsigned long *len) {
+    Atom prop = XInternAtom(disp,"_NET_CLIENT_LIST",False), type;
+    int form;
+    unsigned long remain;
+    unsigned char *list;
+
+    errno = 0;
+    if (XGetWindowProperty(disp,XDefaultRootWindow(disp),prop,0,1024,False,XA_WINDOW,
+                &type,&form,len,&remain,&list) != Success) {
+        perror("Get_WindowList() -- GetWinProp");
+        return 0;
+    }
+
+    return (Window*)list;
+}
+
+/* -- */
+char *Get_WindowName (Display *disp, Window win) {
+    Atom prop = XInternAtom(disp,"WM_NAME",False), type;
+    int form;
+    unsigned long remain, len;
+    unsigned char *list;
+
+    errno = 0;
+    if (XGetWindowProperty(disp,win,prop,0,1024,False,XA_STRING,
+                &type,&form,&len,&remain,&list) != Success) {
+        perror("winlist() -- GetWinProp");
+        return NULL;
+    }
+
+    return (char*)list;
+}
+
+/*
+	NAME
+				emulib_UpdateX11WindowList - get x11 list of open windows.
+	SYNOPSIS
+	  		uae_u32 listsize = emulib_UpdateX11WindowList(void)
+	FUNCTION
+				Attempts to aquire the x11 open window list.
+	INPUTS
+	TAGS
+	RESULTS
+				listsize - uae_u32 how many indexs of windows in the list.
+	EXAMPLE
+	NOTES
+	SEE ALSO
+	BUGS
+ */
+static uae_u32 emulib_UpdateX11WindowList( void ){
+	int i;
+	unsigned long len;
+	Display *disp = XOpenDisplay(NULL);
+	char *name;
+
+	if (!disp) { return -1; }							// well that's highly unlikely!
+
+	XFree(uaelib_x11winlist);
+
+	uaelib_x11winlist = (Window*)Get_WindowList(disp,&len);
+
+  for (i=0;i<(int)len;i++) {
+		name = Get_WindowName(disp,uaelib_x11winlist[i]);
+    printf("-->%s<--\n",name);
+    free(name);
+	}
+/*
+	if(strlen(message)!=0) {
+		for (i = 0; i < 256; i++) {
+			put_byte (program + i, message[i]);
+		}
+	}
+  XFree(list);
+*/
+
+	XCloseDisplay(disp);
+	return len;
+}
+
+/*
+	NAME
+				emulib_GetX11WindowName - get window name
+	SYNOPSIS
+	  		uae_u32 = emulib_GetX11WindowName(index,name)
+	FUNCTION
+				Gets the window name defined by index
+	INPUTS
+				index - index number of window name
+				name - place to store the text of the name
+	TAGS
+	RESULTS
+				null
+	EXAMPLE
+	NOTES
+	SEE ALSO
+	BUGS
+*/
+static uae_u32 emulib_GetX11WindowName(uae_u32 index, uaecptr name){
+	int i;
+	Display *disp = XOpenDisplay(NULL);
+	char *gw_name = Get_WindowName(disp,uaelib_x11winlist[index]);
+
+	printf("Index = %d\n",index);
+	printf("      = %s\n",gw_name);
+
+	if(strlen(gw_name)!=0) {
+		for (i = 0; i < 256; i++) {
+			put_byte (name + i, gw_name[i]);
+		}
+	}
+
+	XCloseDisplay(disp);
+	return 0;
+}
+
 
 /*
 * Runs command on host
@@ -531,6 +657,8 @@ static uae_u32 uaelib_demux_common(uae_u32 ARG0, uae_u32 ARG1, uae_u32 ARG2, uae
 		case 129: return emulib_HostScreenSaver(ARG1);
 		case 130: return emulib_HostRunProgram(ARG1);
 		case 131: return emulib_AmigaRunProgram(ARG1);
+		case 132: return emulib_UpdateX11WindowList();
+		case 133: return emulib_GetX11WindowName(ARG1,ARG2);
 	}
 	return 0;
 }

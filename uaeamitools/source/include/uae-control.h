@@ -51,3 +51,30 @@ struct UAE_CONFIG
        char              df2_name[256];
        char              df3_name[256];
 };
+
+/*
+ *   Fast Memory Size Settings
+ */
+
+ #define CFASTMEM_1MB 0x100000
+ #define CFASTMEM_2MB 0x200000
+ #define CFASTMEM_4MB 0x400000 
+ #define CFASTMEM_8MB 0x800000
+
+/*
+ *   Chip Memory Size Settings
+ */
+
+ #define CCHIPMEM_512K 0x80000
+ #define CCHIPMEM_1MB 0x100000
+ #define CCHIPMEM_1_5MB 0x180000 
+ #define CCHIPMEM_1_8MB 0x1C0000
+
+/*
+ *   Slow Memory Size Settings
+ */
+
+ #define CSLOWMEM_1MB 0x100000
+ #define CSLOWMEM_2MB 0x200000
+ #define CSLOWMEM_4MB 0x400000 
+ #define CSLOWMEM_8MB 0x800000

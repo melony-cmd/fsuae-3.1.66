@@ -23,15 +23,25 @@
 
 int main(int argc,char *argv[]){
 
-  int n;
+  unsigned long n = NULL;
 
   if (!strcmp(argv[1],"/?") || !strcmp(argv[1],"")) {
     printf("fsuae-changefast v0.1 (c) 2023 T.J.Roughton\n");
-    printf("usage: changefast 0-? \n\n");
+    printf("usage: CFASTMEM_1MB | CFASTMEM_2MB | CFASTMEM_4MB | CFASTMEM_8MB | NODELAY\n\n");
     printf("** will reboot emulation! \n");
   } else {
-    n = atoi( argv[1] );
-    ChgFMemSize(n);
+    if(!strcmp(argv[1],"CFASTMEM_1MB")) {n = CFASTMEM_1MB;}
+    if(!strcmp(argv[1],"CFASTMEM_2MB")) {n = CFASTMEM_2MB;}
+    if(!strcmp(argv[1],"CFASTMEM_4MB")) {n = CFASTMEM_4MB;}
+    if(!strcmp(argv[1],"CFASTMEM_8MB")) {n = CFASTMEM_8MB;}
+
+    if(n!=NULL) {
+      printf("Setting %s\n",argv[1]);
+      if(strcmp(argv[2],"NODELAY")) {
+        Delay(100);
+      }
+      ChgFMemSize(n);
+    }
   }
 
   return 0;

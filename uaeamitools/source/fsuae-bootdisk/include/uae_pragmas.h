@@ -4,8 +4,8 @@
 
 static int (*calltrap)(...) = (int (*)(...))0xF0FF60;
 
-static int GetVersion(void) {
-    calltrap (0);
+static int GetVersion(UBYTE *version) {
+    calltrap (0, version);
     return 0;
 }
 
@@ -104,16 +104,15 @@ static int DebugFunc(void) {
   That is why the code style changes below :)
  */
 
-static int GetHostClipboard(void) {
-    calltrap(128);
+static int GetUAELibVersion(UBYTE *version) {
+    calltrap(128, version);
     return 0;
 }
 
-static int GetAmigaClipboard(void) {
-    calltrap(129);
+static int SetHostScreenSaver(UBYTE *state) {
+    calltrap(129, state);
     return 0;
 }
-
 
 static int HostRunProgram(UBYTE *program) {
     calltrap(130, program);

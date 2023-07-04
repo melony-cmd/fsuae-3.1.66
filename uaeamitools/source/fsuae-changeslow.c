@@ -23,15 +23,25 @@
 
 int main(int argc,char *argv[]){
 
-  int n;
+  unsigned long n = NULL;
 
   if (!strcmp(argv[1],"/?") || !strcmp(argv[1],"")) {
-    printf("fsuae-changeslow v0.1 (c) 2023 T.J.Roughton\n");
-    printf("usage: changeslow 0-? \n\n");
+    printf("fsuae-changefast v0.1 (c) 2023 T.J.Roughton\n");
+    printf("usage: CSLOWMEM_1MB | CSLOWMEM_2MB | CSLOWMEM_4MB | CSLOWMEM_8MB | NODELAY\n\n");
     printf("** will reboot emulation! \n");
   } else {
-    n = atoi( argv[1] );
-    ChgSMemSize(n);
+    if(!strcmp(argv[1],"CSLOWMEM_1MB")) {n = CSLOWMEM_1MB;}
+    if(!strcmp(argv[1],"CSLOWMEM_2MB")) {n = CSLOWMEM_2MB;}
+    if(!strcmp(argv[1],"CSLOWMEM_4MB")) {n = CSLOWMEM_4MB;}
+    if(!strcmp(argv[1],"CSLOWMEM_8MB")) {n = CSLOWMEM_8MB;}
+
+    if(n!=NULL) {
+      printf("Setting %s\n",argv[1]);
+      if(strcmp(argv[2],"NODELAY")) {
+        Delay(100);
+      }
+      ChgSMemSize(n);
+    }
   }
 
   return 0;

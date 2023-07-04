@@ -25,6 +25,8 @@ sc fsuae-getdisk.c opt link to fsuae-getdisk noicons
 sc fsuae-version.c opt link to fsuae-version noicons
 sc fsuae-libversion.c opt link to fsuae-libversion noicons
 sc fsuae-setscreensaver.c opt link to fsuae-setscreensaver noicons
+sc fsuae-uaeconfig.c opt link to fsuae-uaeconfig noicons
+sc fsuae-getx11windowlist.c opt link to fsuae-getx11windowlist noicons
 
 delete #?.o
 delete #?.lnk
@@ -51,3 +53,4 @@ copy fsuae-getdisk sys:bin/
 copy fsuae-version sys:bin/
 copy fsuae-libversion sys:bin/
 copy fsuae-setscreensaver sys:bin/
+copy fsuae-uaeconfig sys:bin/

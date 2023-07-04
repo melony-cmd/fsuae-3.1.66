@@ -1,0 +1,5 @@
+FROM LIB:c.o "fsuae-changefast.o"
+TO "fsuae-changefast"
+LIB LIB:sc.lib LIB:amiga.lib
+NOICONS
+

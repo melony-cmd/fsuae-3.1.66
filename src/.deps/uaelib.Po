@@ -286,8 +286,8 @@ src/uaelib.o: src/uaelib.cpp /usr/include/stdc-predef.h \
  src/include/uae/inline.h src/include/uae/jitconfig.h \
  src/include/sysdeps.h /usr/include/X11/Xlib.h /usr/include/X11/X.h \
  /usr/include/X11/Xfuncproto.h /usr/include/X11/Xosdefs.h \
- src/include/options.h src/include/uae/limits.h src/include/uae.h \
- src/include/uae/memory.h src/od-fs/machdep/maccess.h \
+ /usr/include/X11/Xatom.h src/include/options.h src/include/uae/limits.h \
+ src/include/uae.h src/include/uae/memory.h src/od-fs/machdep/maccess.h \
  src/od-fs/machdep/x86/maccess.h src/include/uae/inline.h \
  src/include/custom.h src/include/options.h src/include/newcpu.h \
  src/include/uae/memory.h src/include/uae/asm.h src/include/readcpu.h \
@@ -703,6 +703,7 @@ src/include/sysdeps.h:
 /usr/include/X11/X.h:
 /usr/include/X11/Xfuncproto.h:
 /usr/include/X11/Xosdefs.h:
+/usr/include/X11/Xatom.h:
 src/include/options.h:
 src/include/uae/limits.h:
 src/include/uae.h:
