@@ -125,11 +125,21 @@ static int AmigaRunProgram(UBYTE *program) {
 }
 
 
-static int UpdateX11WindowList(ULONG listsize) {    
-    return calltrap(132, listsize);;
+static int UpdateX11WindowList(void) {    
+    return calltrap(132);
 }
 
 static int GetX11WindowName(ULONG index,UBYTE *name) {
     calltrap(133, index, name);
+    return 0;
+}
+
+static int RaiseWindowByName(UBYTE *name) {
+    calltrap(134, name);
+    return 0;
+}
+
+static int RaiseWindowByIndex(ULONG index) {
+    calltrap(135, index);
     return 0;
 }

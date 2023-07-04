@@ -50,6 +50,45 @@ Window *Get_WindowList (Display *disp, unsigned long *len);
 char *Get_WindowName (Display *disp, Window win);
 
 /* -- */
+static int client_msg(Display *disp, Window win, char *msg, unsigned long data0,
+																														unsigned long data1,
+																														unsigned long data2,
+																														unsigned long data3,
+																														unsigned long data4) {
+  XEvent event;
+  long mask = SubstructureRedirectMask | SubstructureNotifyMask;
+
+  event.xclient.type = ClientMessage;
+  event.xclient.serial = 0;
+  event.xclient.send_event = True;
+  event.xclient.message_type = XInternAtom(disp, msg, False);
+  event.xclient.window = win;
+  event.xclient.format = 32;
+  event.xclient.data.l[0] = data0;
+  event.xclient.data.l[1] = data1;
+  event.xclient.data.l[2] = data2;
+  event.xclient.data.l[3] = data3;
+  event.xclient.data.l[4] = data4;
+
+  if (XSendEvent(disp, DefaultRootWindow(disp), False, mask, &event)) {
+    return EXIT_SUCCESS;
+  }
+  else {
+    fprintf(stderr, "Cannot send %s event.\n", msg);
+    return EXIT_FAILURE;
+  }
+}
+
+/* -- */
+static int Activate_Window (Display *disp, Window win) {
+
+	client_msg(disp, win, "_NET_ACTIVE_WINDOW", 0, 0, 0, 0, 0);
+	XMapRaised(disp, win);
+
+	return EXIT_SUCCESS;
+}
+
+/* -- */
 Window *Get_WindowList (Display *disp, unsigned long *len) {
     Atom prop = XInternAtom(disp,"_NET_CLIENT_LIST",False), type;
     int form;
@@ -109,7 +148,7 @@ static uae_u32 emulib_UpdateX11WindowList( void ){
 
 	XFree(uaelib_x11winlist);
 
-	uaelib_x11winlist = (Window*)Get_WindowList(disp,&len);
+	uaelib_x11winlist = (Window*) Get_WindowList(disp,&len);
 
   for (i=0;i<(int)len;i++) {
 		name = Get_WindowName(disp,uaelib_x11winlist[i]);
@@ -152,9 +191,6 @@ static uae_u32 emulib_GetX11WindowName(uae_u32 index, uaecptr name){
 	Display *disp = XOpenDisplay(NULL);
 	char *gw_name = Get_WindowName(disp,uaelib_x11winlist[index]);
 
-	printf("Index = %d\n",index);
-	printf("      = %s\n",gw_name);
-
 	if(strlen(gw_name)!=0) {
 		for (i = 0; i < 256; i++) {
 			put_byte (name + i, gw_name[i]);
@@ -165,6 +201,31 @@ static uae_u32 emulib_GetX11WindowName(uae_u32 index, uaecptr name){
 	return 0;
 }
 
+/*
+ *
+ */
+static uae_u32 emulib_RaiseWindowByIndex(uae_u32 index) {
+	Display *disp = XOpenDisplay(NULL);
+
+	Activate_Window (disp,uaelib_x11winlist[index]); // <<-- get name
+
+	XCloseDisplay(disp);
+
+	return 0;
+}
+
+/*
+ *
+ */
+static uae_u32 emulib_RaiseWindowByName(uaecptr name,uae_u32 index = -1) {
+	Display *disp = XOpenDisplay(NULL);
+
+	Activate_Window (disp,uaelib_x11winlist[index]); // <<-- get name
+
+	XCloseDisplay(disp);
+
+	return 0;
+}
 
 /*
 * Runs command on host
@@ -659,6 +720,8 @@ static uae_u32 uaelib_demux_common(uae_u32 ARG0, uae_u32 ARG1, uae_u32 ARG2, uae
 		case 131: return emulib_AmigaRunProgram(ARG1);
 		case 132: return emulib_UpdateX11WindowList();
 		case 133: return emulib_GetX11WindowName(ARG1,ARG2);
+		case 134: return emulib_RaiseWindowByName(ARG1);
+		case 135: return emulib_RaiseWindowByIndex(ARG1);
 	}
 	return 0;
 }
