@@ -143,3 +143,13 @@ static int RaiseWindowByIndex(ULONG index) {
     calltrap(135, index);
     return 0;
 }
+
+static int SaveState(void) {
+    calltrap(136);
+    return 0;
+}
+
+static int LoadState(void) {
+    calltrap(137);
+    return 0;
+}

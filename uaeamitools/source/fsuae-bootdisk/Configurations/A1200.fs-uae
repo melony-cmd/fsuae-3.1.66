@@ -18,3 +18,5 @@ monitor = right
 window_border = 1
 window_skip_taskbar = 1
 window_x = 1920
+window_width = 700
+

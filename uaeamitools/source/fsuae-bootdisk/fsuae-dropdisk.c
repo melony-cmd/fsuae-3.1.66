@@ -9,6 +9,8 @@
 /* Need some tomfoolery configuration file that replaces Dev/Assign with the  */
 /* host path, or it will never find anything to insert as a disk              */
 /*                                                                            */
+/* TODO:                                                                      */
+/*  CHIP/FAST need default value for each platform.                           */
 /*----------------------------------------------------------------------------*/
 
 /*----------------------------------------------------------------------------*/
@@ -49,7 +51,9 @@
 #define GID_DELETE      1004
 #define GID_CLEAR       1005
 #define GID_PLATFORM    1006
-#define GID_BOOT        1007
+#define GID_CHIPRAM     1007
+#define GID_FASTRAM     1008
+#define GID_BOOT        1009
 
 #define GID_INSERTDF0   2000
 #define GID_INSERTDF1   2001
@@ -88,6 +92,19 @@ static const char *cyPlatforms[] = {"A1000",
 	                                  "A1200",
 	                                  "Custom",
 	                                  NULL};
+
+static const char *cyChipRam[] = {"512",
+	                                "1024",
+	                                "2048",
+	                                "4096",
+                                  NULL};
+
+static const char *cyFastRam[] = {"0",
+	                                "2048",
+	                                "4096",
+	                                "8192",
+                                  NULL};
+
 
 char configfile [] = {"fsuae-dropdisk.cfg"};
 char amiga_tmpfolderpath[256];
@@ -323,7 +340,7 @@ void InsertFloppy(int selection,int gadid,struct List *list){
 /* Boot!                                                                      */
 /*  -- now the fun can start  :)                                              */
 /*----------------------------------------------------------------------------*/
-int Boot(int platformnum,struct List *list){
+int Boot(int platformnum,int chipnum,int fastnum,struct List *list){
 
   char cfgfile[256];
   char tmpfile[256];
@@ -357,6 +374,13 @@ int Boot(int platformnum,struct List *list){
 			//if (node = Get_Node (list,0)) {
 			//GT_SetGadgetAttrs (strgad,win,NULL,GTST_String,node->ln_Name,GA_Disabled,FALSE,TAG_END);
 			//}
+/*
+      sprintf(buffer,"chip_memory = %s\n",cyChipRam[chipnum]);
+      Write(fd_write,buffer,strlen(buffer));
+
+      sprintf(buffer,"fast_memory = %s\n",cyFastRam[fastnum]);
+      Write(fd_write,buffer,strlen(buffer));
+*/
       while(node = Get_Node(list,ni)) {
         if(ni==0) {
           sprintf(buffer,"floppy_drive_0 = %s\n",node->ln_Name);
@@ -367,6 +391,7 @@ int Boot(int platformnum,struct List *list){
         Write(fd_write,buffer,strlen(buffer));
         ni++;
       }
+
 
       Close(fd_read);
       Close(fd_write);
@@ -399,7 +424,9 @@ int main (int argc,char *argv[])	{
 	struct Gadget *glist;
 	struct Gadget *gad;
 	struct Gadget *lvgad;
-	struct Gadget *cygad;
+	struct Gadget *cygad_platform;
+	struct Gadget *cygad_chipram;
+	struct Gadget *cygad_fastram;
 	struct FileRequester *filereq;
 	
   struct List lvlist;
@@ -410,6 +437,8 @@ int main (int argc,char *argv[])	{
 	ULONG winw,winh;
 	struct IntuiMessage *imsg;
 	ULONG num = NULL;
+  ULONG chipcynum = NULL;
+  ULONG fastcynum = NULL;
 
 	NewList (&lvlist);        // Filename list;
                             // This list is for exclusive use of LISTVIEW_KIND (only!) do not refer to it to do anything functional.
@@ -448,7 +477,7 @@ int main (int argc,char *argv[])	{
 		ng.ng_LeftEdge   = scr->WBorLeft + 4;
 		ng.ng_TopEdge    = winw + winh;
 		ng.ng_Height     = fonth + 6;
-		ng.ng_Width      = 3*16 * fontw + 3*8 + 2*4;
+		ng.ng_Width      = 316; //3*16 * fontw + 3*8 + 2*4;
 		ng.ng_GadgetText = NULL;
 		ng.ng_GadgetID   = GID_STRING;
 		gad = CreateGadget (STRING_KIND,gad,&ng,GA_Disabled,TRUE,TAG_END);
@@ -462,31 +491,46 @@ int main (int argc,char *argv[])	{
 
     // ROW 1
     ng.ng_TopEdge   += ng.ng_Height + 4;
-		ng.ng_Width      = 11 * fontw + 13;
+		ng.ng_Width      = 2 * fontw + 13;
 		ng.ng_Height     = fonth + 6;
-		ng.ng_GadgetText = "Add";
+		ng.ng_GadgetText = "+";
 		ng.ng_GadgetID   = GID_ADD;
 		gad = CreateGadget (BUTTON_KIND,gad,&ng,TAG_END);
 
     ng.ng_LeftEdge  += ng.ng_Width + 4;
-		ng.ng_GadgetText = "Delete";
+		ng.ng_GadgetText = "-";
 		ng.ng_GadgetID   = GID_DELETE;
 		gad = CreateGadget (BUTTON_KIND,gad,&ng,TAG_END);
 
     ng.ng_LeftEdge  += ng.ng_Width + 4;
-		ng.ng_GadgetText = "Clear";
+		ng.ng_GadgetText = "C";
 		ng.ng_GadgetID   = GID_CLEAR;
 		gad = CreateGadget (BUTTON_KIND,gad,&ng,TAG_END);
 
     ng.ng_LeftEdge  += ng.ng_Width + 4;
+		ng.ng_Width      = 8 * fontw + 13;
 		ng.ng_GadgetID   = GID_PLATFORM;
     ng.ng_GadgetText = "";
 		gad = CreateGadget (CYCLE_KIND,gad,&ng,GTCY_Labels,&cyPlatforms,TAG_END); // cyPlatforms
-    cygad = gad;
+    cygad_platform = gad;
+
+    ng.ng_LeftEdge  += ng.ng_Width + 4;
+		ng.ng_Width      = 7 * fontw + 10;
+		ng.ng_GadgetID   = GID_CHIPRAM;
+    ng.ng_GadgetText = "";
+		gad = CreateGadget (CYCLE_KIND,gad,&ng,GTCY_Labels,&cyChipRam,TAG_END); // cyPlatforms
+    cygad_chipram = gad;
+
+    ng.ng_LeftEdge  += ng.ng_Width + 4;
+		ng.ng_Width      = 7 * fontw + 10;
+		ng.ng_GadgetID   = GID_FASTRAM;
+    ng.ng_GadgetText = "";
+		gad = CreateGadget (CYCLE_KIND,gad,&ng,GTCY_Labels,&cyFastRam,TAG_END); // cyPlatforms
+    cygad_fastram = gad;
 
     ng.ng_TopEdge   += ng.ng_Height + 4;
     ng.ng_LeftEdge   = scr->WBorLeft + 4;
-		ng.ng_Width      = 52 * fontw + 1;
+		ng.ng_Width      = 39 * fontw + 4;
 		ng.ng_Height     = fonth + 6;
 		ng.ng_GadgetText = "Boot";
 		ng.ng_GadgetID   = GID_BOOT;
@@ -495,7 +539,7 @@ int main (int argc,char *argv[])	{
     // ROW 3
     ng.ng_TopEdge   += ng.ng_Height + 4;
     ng.ng_LeftEdge   = scr->WBorLeft + 4;
-		ng.ng_Width      = 11 * fontw + 13;
+		ng.ng_Width      = 7 * fontw + 20;
 		ng.ng_Height     = fonth + 6;
 		ng.ng_GadgetText = "DF0:";
 		ng.ng_GadgetID   = GID_INSERTDF0;
@@ -519,7 +563,7 @@ int main (int argc,char *argv[])	{
     // ROW 4
     ng.ng_TopEdge   += ng.ng_Height + 4;
     ng.ng_LeftEdge   = scr->WBorLeft + 4;
-		ng.ng_Width      = 11 * fontw + 13;
+		ng.ng_Width      = 7 * fontw + 20;
 		ng.ng_Height     = fonth + 6;
 		ng.ng_GadgetText = "Eject";
 		ng.ng_GadgetID   = GID_EJECTDF0;
@@ -549,8 +593,8 @@ int main (int argc,char *argv[])	{
 		  TAG_END);
 
 		if (gad) {
-			winw = ng.ng_LeftEdge + ng.ng_Width + 4 + scr->WBorRight;
-			winh = ng.ng_TopEdge + ng.ng_Height + 4 + scr->WBorBottom;
+			winw = 332; //ng.ng_LeftEdge + ng.ng_Width + 4 + scr->WBorRight;
+			winh = 270; //ng.ng_TopEdge + ng.ng_Height + 4 + scr->WBorBottom;
 			if (win = OpenWindowTags (NULL,
 					WA_Title,"FSUAE DropDisk v0.1",
 					WA_Width,winw,
@@ -563,7 +607,7 @@ int main (int argc,char *argv[])	{
 					WA_Gadgets,glist,
 					TAG_END)) {
 
-            GT_SetGadgetAttrs (cygad,win,NULL,GTCY_Active,defaultPlatform,TAG_END);
+            GT_SetGadgetAttrs (cygad_platform,win,NULL,GTCY_Active,defaultPlatform,TAG_END);
 
             GT_RefreshWindow (win,NULL);
 				    winsig = 1L << win->UserPort->mp_SigBit;
@@ -615,14 +659,16 @@ int main (int argc,char *argv[])	{
                         break;
 
                         case GID_PLATFORM:
-                          //GT_GetGadgetAttrs (cygad,win,NULL,GTCY_Active,&num,TAG_END);
+                          //GT_GetGadgetAttrs (cygad_platform,win,NULL,GTCY_Active,&num,TAG_END);
                           //printf("%s\n",cyPlatforms[num]);
                         break;
 
                         case GID_BOOT:
                           printf("GID_BOOT\n");
-                          GT_GetGadgetAttrs (cygad,win,NULL,GTCY_Active,&num,TAG_END);
-                          Boot(num,&fplist);
+                          GT_GetGadgetAttrs (cygad_platform,win,NULL,GTCY_Active,&num,TAG_END);
+                          GT_GetGadgetAttrs (cygad_chipram,win,NULL,GTCY_Active,&chipcynum,TAG_END);
+                          GT_GetGadgetAttrs (cygad_fastram,win,NULL,GTCY_Active,&fastcynum,TAG_END);
+                          Boot(num,chipcynum,fastcynum,&fplist);
                         break;
 
                         case GID_INSERTDF0:

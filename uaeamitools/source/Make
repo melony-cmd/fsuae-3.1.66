@@ -27,6 +27,10 @@ sc fsuae-libversion.c opt link to fsuae-libversion noicons
 sc fsuae-setscreensaver.c opt link to fsuae-setscreensaver noicons
 sc fsuae-uaeconfig.c opt link to fsuae-uaeconfig noicons
 sc fsuae-getx11windowlist.c opt link to fsuae-getx11windowlist noicons
+sc fsuae-savestate.c opt link to fsuae-savestate noicons
+sc fsuae-loadstate.c opt link to fsuae-loadstate noicons
+
+sc WBStartup_Execute.c opt link to WBStartupExecute
 
 delete #?.o
 delete #?.lnk
@@ -54,3 +58,8 @@ copy fsuae-version sys:bin/
 copy fsuae-libversion sys:bin/
 copy fsuae-setscreensaver sys:bin/
 copy fsuae-uaeconfig sys:bin/
+copy fsuae-getx11windowlist sys:bin/
+copy WBStartup_Execute sys:WBStartup/
+copy WBStartup_Execute.info sys:WBStartup/
+
+

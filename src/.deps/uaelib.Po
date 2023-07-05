@@ -298,7 +298,7 @@ src/uaelib.o: src/uaelib.cpp /usr/include/stdc-predef.h \
  src/include/traps.h src/include/disk.h src/include/debug.h \
  src/include/gensound.h src/include/picasso96.h src/include/traps.h \
  src/od-win32/picasso96_win.h src/od-win32/dxwrap.h \
- src/include/rtgmodes.h src/include/filesys.h
+ src/include/rtgmodes.h src/include/filesys.h src/include/savestate.h
 /usr/include/stdc-predef.h:
 /usr/include/SDL2/SDL.h:
 /usr/include/SDL2/SDL_main.h:
@@ -738,3 +738,4 @@ src/od-win32/picasso96_win.h:
 src/od-win32/dxwrap.h:
 src/include/rtgmodes.h:
 src/include/filesys.h:
+src/include/savestate.h:

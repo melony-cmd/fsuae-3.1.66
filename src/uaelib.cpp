@@ -38,8 +38,35 @@
 #include "gensound.h"
 #include "picasso96.h"
 #include "filesys.h"
+#include "savestate.h"
 
 #define LIBUAEVERSION "0.3.2"
+
+/*
+ * Save State
+ */
+static uae_u32 emulib_SaveState(void){
+	printf("UAELib - emulib_SaveState\n");
+	savestate_quick (0,1);
+	return 0;
+}
+
+/*
+ * Load State
+ */
+static uae_u32 emulib_LoadState(void){
+	printf("UAELib - emulib_LoadState\n");
+	savestate_quick (0,0);
+	return 0;
+}
+
+/*
+ * Load State
+ */
+static uae_u32 emulib_DeleteState(uaecptr statename){
+
+	return 0;
+}
 
 /*
  *  Get_X11WindowList()
@@ -722,6 +749,8 @@ static uae_u32 uaelib_demux_common(uae_u32 ARG0, uae_u32 ARG1, uae_u32 ARG2, uae
 		case 133: return emulib_GetX11WindowName(ARG1,ARG2);
 		case 134: return emulib_RaiseWindowByName(ARG1);
 		case 135: return emulib_RaiseWindowByIndex(ARG1);
+		case 136: return emulib_SaveState();
+		case 137: return emulib_LoadState();
 	}
 	return 0;
 }
