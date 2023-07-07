@@ -1,5 +1,0 @@
-FROM LIB:c.o "fsuae-uaeconfig.o"
-TO "fsuae-uaeconfig"
-LIB LIB:sc.lib LIB:amiga.lib
-NOICONS
-

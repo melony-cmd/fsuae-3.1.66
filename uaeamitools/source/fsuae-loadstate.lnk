@@ -1,5 +1,0 @@
-FROM LIB:c.o "fsuae-loadstate.o"
-TO "fsuae-loadstate"
-LIB LIB:sc.lib LIB:amiga.lib
-NOICONS
-

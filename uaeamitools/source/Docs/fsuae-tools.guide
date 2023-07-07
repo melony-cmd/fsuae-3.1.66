@@ -1,0 +1,446 @@
+@database fsuae-tools.guide
+@wordwarp
+
+@node Main "FSUAE Tools Guide"
+
+* UAE-Control - Emulator control from inside emulation
+*  (c) 1996 Tauno Taipaleenmaki <tataipal@raita.oulu.fi>
+*  (c) 1998 Cloanto <info@cloanto.com>
+*  (C) 2023 T.J.Roughton <melonytr@gmail.com>
+
+FSUAE Tools is developed on a custom compiled version of FSUAE v3.1.66 
+therefore some of tools below will not function without it.
+
+The command that absolutely will not work without my alterations to the
+internal code of FSUAE are marked with '*' these tools are the intention
+there by is to be able to intergrate the emulation into the current host
+and by host I mean Linux, I have no intention to port any of this to WinUAE
+as it is potentially platform dependant ie. Linux.
+
+------------------------------------------------------------------------------
+
+FSUAE - UAELib Tools for Cli
+
+* @{"fsuae-hostrun" link fsuae-hostrun }
+
+* @{"fsuae-server" link fsuae-server }
+
+@{"fsuae-insertdisk" link fsuae-insertdisk }  @{"fsuae-ejectdisk" link fsuae-ejectdisk }
+
+@{"fsuae-hardreboot" link fsuae-hardreboot }  @{"fsuae-softreboot" link fsuae-softreboot }
+
+@{"fsuae-enablesound" link fsuae-enablesound }  @{"fsuae-disablesound" link fsuae-disablesound }
+
+@{"fsuae-debug" link fsuae-debug }
+
+@{"fsuae-enablejoystick" link fsuae-enablejoystick }  @{"fsuae-disablejoystick" link fsuae-disablejoystick }
+
+@{"fsuae-setframerate" link fsuae-setframerate }
+
+@{"fsuae-changechip" link fsuae-changechip }  @{"fsuae-changefast" link fsuae-changefast }  @{"fsuae-changeslow" link fsuae-changeslow }
+
+@{"fsuae-changelanguage" link fsuae-changelanguage }
+
+@{"fsuae-exitemu" link fsuae-exitemu }
+
+@{"fsuae-getdisk" link fsuae-getdisk }
+
+* @{"fsuae-version" link fsuae-version }  * @{"fsuae-libversion" link fsuae-libversion }
+
+* @{"fsuae-setscreensaver" link fsuae-setscreensaver }
+
+@{"fsuae-uaeconfig" link fsuae-uaeconfig }
+
+* @{"fsuae-getx11windowlist" link fsuae-getx11windowlist }
+
+* @{"fsuae-savestate" link fsuae-savestate}  @{"fsuae-loadstate" link fsuae-loadstate }
+
+AmigaOS User Interface Applications
+
+* @{"fsuae-dropdisk" link fsuae-dropdisk }
+
+AmigaOS Applications
+
+@{"WBStartupExecute" link WBStartupExecute }
+
+@endnode
+
+@node fsuae-hostrun "FSUAE Tools Guide - fsuae-hostrun"
+
+@{b}About:@{ub}
+  Launches applications on the host side of the emulation, if you launched FSUAE from a terminal the output commands should appear in that location.
+
+@{b}Usage:@{ub} 
+  <host command>
+
+@{b}Examples:@{ub} 
+  fsuae-hostrun dir
+  fsuae-hostrun /path/executable
+
+@endnode
+
+@node fsuae-server "FSUAE Tools Guide - fsuae-server"
+
+@{b}About:@{ub}
+  This server is intended to be inserted into S:Startup-Sequence its purpose is to launch applications based on incoming messages from the host of the
+  emulation, to a named pipe that should exist in /tmp/fsuae-message.
+
+@{b}Installation:@{ub}
+  The line below should be added somewhere in your startup sequence
+  Run >NIL: Sys:Bin/fsuae-server start
+
+@{b}Usage:@{ub}
+  fsuae-server start
+
+@{b}Examples:@{ub} 
+  Emulation
+  Run >NIL: Sys:Bin/fsuae-server start
+
+  Host
+  echo "sys:tools/SnoopDos" >/tmp/fsuae-message
+
+@{b}NB:@{ub} 
+  I am certain that there must be more elegant ways to do this, however this works as a starting point at least.
+
+@endnode
+
+@node fsuae-insertdisk "FSUAE Tools Guide - fsuae-insertdisk"
+
+@{b}About:@{ub}
+  Insert a disk image into a drive, pretty simple right? wrong.
+
+  if the disk image is within the file system of the emulation eg. in an hdf it's never in a month of sundays ever going to be found =ever=  
+  the path to the disk image should be thought of how you would access from the host side instead see examples.
+
+@{b}Usage:@{ub}
+  <adf/dms> 0->3
+
+  Where 0->3 refers to;
+  0 = DF0:        --> Normally always enabled.
+  1 = DF1:        --> Should ensure this drive is enabled in your emulation configuration.
+  2 = DF2:        --> Should ensure this drive is enabled in your emulation configuration.
+  3 = DF3:        --> Should ensure this drive is enabled in your emulation configuration.
+
+@{b}Examples:@{ub}
+  fsuae-insertdisk Work:Demos/DesertDream.dms 0 -- BAD! won't work.
+
+  fsuae-insertdisk /mnt/Appz/Emu/Media/Demos/Amiga/DesertDream.dms 0 -- GOOD and should work.
+
+@endnode
+
+@node fsuae-ejectdisk "FSUAE Tools Guide - fsuae-ejectdisk"
+
+@{b}About:@{ub}
+  Ejects disks that might be inserted into a drive.
+
+@{b}Usage:@{ub}
+  drive 0->3
+
+  Where 0->3 refers to;
+  0 = DF0:        --> Normally always enabled.
+  1 = DF1:        --> Should ensure this drive is enabled in your emulation configuration.
+  2 = DF2:        --> Should ensure this drive is enabled in your emulation configuration.
+  3 = DF3:        --> Should ensure this drive is enabled in your emulation configuration.
+
+@{b}Examples:@{ub} 
+  fsuae-ejectdisk 0
+
+@endnode
+
+@node fsuae-hardreboot "FSUAE Tools Guide - fsuae-hardreboot"
+
+@{b}About:@{ub}
+  No idea what this does by internal means of the emulation, it's assumed that a hard reboot clears all allocated memory resulting
+  in an emulation just being started fresh.
+
+@{b}Examples:@{ub} 
+  fsuae-hardreboot
+
+@endnode
+
+@node fsuae-softreboot "FSUAE Tools Guide - fsuae-softreboot"
+
+@{b}About:@{ub}
+  No idea what this does by internal means of the emulation, it's assumed that it does not clear allocated memory.
+
+@{b}Examples:@{ub} 
+  fsuae-softreboot
+@{b}Examples:@{ub}
+  fsuae-getdisk 0 - prints whatever is in drive 0 as a disk image.  
+
+@endnode
+
+@node fsuae-version "FSUAE Tools Guide - fsuae-version"
+
+@{b}About:@{ub}
+  Prints the current version of FS-UAE you are currently using, when I frist encounted this as part of the 27 year old command set it
+  no longer functioned;
+
+@endnode
+
+@node fsuae-enablesound "FSUAE Tools Guide - fsuae-enablesound"
+
+@{b}Examples:@{ub}
+  fsuae-getdisk 0 - prints whatever is in drive 0 as a disk image.  
+
+@endnode
+
+@node fsuae-version "FSUAE Tools Guide - fsuae-version"
+
+@{b}About:@{ub}
+  Prints the current version of FS-UAE you are currently using, when I frist encounted this as part of the 27 year old command set it
+  no longer functioned;
+@{b}About:@{ub}
+  Simply turns the souned back on again.
+
+  NB: I've been unable to get this to work myself, I may have to dig into why it does not disable/enable sound.
+
+@{b}Examples:@{ub} 
+  fsuae-enablesound
+
+@endnode
+
+@node fsuae-disablesound "FSUAE Tools Guide - fsuae-disablesound"
+
+@{b}About:@{ub}
+  Simply turns the sound off.
+
+  NB: I've been unable to get this to work myself, I may have to dig into why it does not disable/enable sound.
+
+@{b}Examples:@{ub} 
+  fsuae-disablesound
+
+@endnode
+
+@node fsuae-debug "FSUAE Tools Guide - fsuae-debug"
+
+@{b}About:@{ub}
+  See the terminal where you launched the emulation for the debugger console.
+
+@{b}Examples:@{ub} 
+  fsuae-debug
+
+@endnode
+
+@node fsuae-setframerate "FSUAE Tools Guide - fsuae-setframerate"
+
+@{b}About:@{ub}
+  Sets frame rate of the emulation.
+
+@{b}Usage:@{ub}
+  setframerate 0-?
+
+@{b}Examples:@{ub} 
+  setframerate 1
+
+@endnode
+
+@node fsuae-changechip "FSUAE Tools Guide - fsuae-changechip"
+
+@{b}About:@{ub}
+  Set the available chipram to something other than current, I had hoped that it could be set to whatever size I desired this is not
+  the case, changing memory sizes is limited to a set of sizes, having said that who really needs an Amiga with 12gb of video ram
+  anyway?
+
+@{b}Usage:@{ub}
+  usage: CCHIPMEM_512K | CCHIPMEM_1MB | CCHIPMEM_1_5MB | CCHIPMEM_1_8MB | NODELAY
+
+@{b}Examples:@{ub} 
+  fsuae-changechip CCHIPMEM_1MB NODELAY - results in immedate reboot changing the available chip memory to 1Mb
+
+  fsuae-changechip CCHIPMEM_1MB - results in a delayed reboot changing the available chip memory to 1Mb
+
+@endnode
+
+@node fsuae-changefast "FSUAE Tools Guide - fsuae-changefast"
+
+@{b}About:@{ub}
+  Set the available fastram to something other than current, I had hoped that it could be set to whatever size I desired this is not
+  the case, changing memory sizes is limited to a set of sizes, having said that who really needs an Amiga with 64gb of ram anyway?
+
+@{b}Usage:@{ub}
+  usage: CFASTMEM_1MB | CFASTMEM_2MB | CFASTMEM_4MB | CFASTMEM_8MB | NODELAY
+
+@{b}Examples:@{ub} 
+  fsuae-changechip CFASTMEM_1MB NODELAY - results in immedate reboot changing the available fast memory to 1Mb
+
+  fsuae-changechip CFASTMEM_1MB - results in a delayed reboot changing the available fast memory to 1Mb
+
+@endnode
+
+@node fsuae-changeslow "FSUAE Tools Guide - fsuae-changeslow"
+
+@{b}About:@{ub}
+  Set the available slowram to something other than current, I had hoped that it could be set to whatever size I desired this is not
+  the case, changing memory sizes is limited to a set of sizes, having said that who really needs an Amiga with 64gb of ram anyway?
+
+@{b}Usage:@{ub}
+  usage: CSLOWMEM_1MB | CSLOWMEM_2MB | CSLOWMEM_4MB | CSLOWMEM_8MB | NODELAY
+
+@{b}Examples:@{ub} 
+  fsuae-changechip CSLOWMEM_1MB NODELAY - results in immedate reboot changing the available slow memory to 1Mb
+
+  fsuae-changechip CSLOWMEM_1MB - results in a delayed reboot changing the available slow memory to 1Mb
+
+@endnode
+
+@node fsuae-changelanguage "FSUAE Tools Guide - fsuae-changelanguage"
+
+@{b}About:@{ub}
+  Change the language.
+
+@{b}Usage:@{ub}
+  usage: 1 = US, 2 = DE, 3 = SE, 4 = FR, 5 = IT
+
+@{b}Examples:@{ub} 
+  fsuae-changelanguage 1 - US language
+
+@endnode
+
+@node fsuae-exitemu "FSUAE Tools Guide - fsuae-exitemu"
+
+@{b}About:@{ub}
+  Exit the emulation, what you're to good to press mouse buttons on gadgets?
+
+@{b}Examples:@{ub} 
+  fsuae-exitemu
+
+@endnode
+
+@node fsuae-getdisk "FSUAE Tools Guide - fsuae-getdisk"
+
+@{b}About:@{ub}
+  Find out what is inserted into a drive.
+
+@{b}Usage:@{ub}
+  usage: getdisk 0->3
+
+  0 = DF0:        --> Normally always enabled.
+  1 = DF1:        --> Should ensure this drive is enabled in your emulation configuration.
+  2 = DF2:        --> Should ensure this drive is enabled in your emulation configuration.
+  3 = DF3:        --> Should ensure this drive is enabled in your emulation configuration.
+S:User-WBStartup
+
+  ""
+
+  is not a version, it now works properly as intended, however useful for discovery if I happened to want to prevent an application from
+  running on older versions of FS-UAE.
+
+@{b}Examples:@{ub} 
+  fsuae-version
+
+@endnode
+
+@node fsuae-libversion "FSUAE Tools Guide - fsuae-libversion"
+
+@{b}About:@{ub}
+  Prints the internal verison of libuae, we didn't have one before.
+
+@{b}Examples:@{ub}
+  fsuae-libversion
+
+@endnode
+
+@node fsuae-setscreensaver "FSUAE Tools Guide - fsuae-setscreensaver"
+
+@{b}About:@{ub}
+  FS-UAE most definitly and or rather SDL disables the screensaver, this is NOT good behavior if you're running an Amiga Emulation as a desktop
+  as it prevents the login screen saver from turning off the screens and locking the computer down, so I'll have my control back .. thank you.
+
+@{b}Usage:@{ub}
+  usage: 0 = disable / 1 = enable
+
+@{b}Examples:@{ub} 
+  fsuae-setscreensaver 0 - disable the host screensaver
+  fsuae-setscreensaver 1 - enable the host screensaver
+
+@endnode
+
+@node fsuae-uaeconfig "FSUAE Tools Guide - fsuae-uaeconfig"
+
+@{b}About:@{ub}
+  Prints out to a console the current configuration of FS-UAE, this is very limited in scope of what configuration settings it displays
+  it's on an internal todo list to get updated someday.
+
+  Give the guys a break it was 27 years ago the code was likely even touched.
+
+@{b}Examples:@{ub}
+  fsuae-uaeconfig
+
+@endnode
+
+@node fsuae-getx11windowlist "FSUAE Tools Guide - fsuae-getx11windowlist"
+
+@{b}About:@{ub}
+  Outputs a list of open windows on the host with a given index number beside it, which can then be used to push that window to front!
+
+  Admitedly I over complicated things here this functionality became less *required* after I found 'wmctrl' where by I could for the
+  emulation window to always be the bottom most window, which forces all other windows to be above it.
+
+  The theory behind it was to have some sort of UI to control the windows or open fake hidden windows on the emulation that when triggered
+  by events on the emulation side translated to effects on the host.
+
+@{b}Usage:@{ub}
+  usage: LIST - Lists open windows on X11
+         WindowNum  - Pushes given window number to front
+         (W.I.P) WindowName - Pushes given window name to front
+
+@{b}Examples:@{ub} 
+  fsuae-getx11windowlist WindowNum 7
+  (W.I.P) fsuae-getx11windowlist WindowName ThisWindow
+
+@endnode
+
+@node fsuae-savestate "FSUAE Tools Guide - fsuae-savestate"
+
+@{b}About:@{ub}
+  Save state from the command line.
+
+@{b}Usage:@{ub}
+  usage: <slot number> | NOOVERWRITE
+
+  nb: NOOVERWRITE is an unimplymented functionality at the moment.
+
+@{b}Examples:@{ub} 
+  fsuae-savestate 1
+  fsuae-savestate 1 NOOVERWRITE
+
+@endnode
+
+@node fsuae-loadstate "FSUAE Tools Guide - fsuae-loadstate"
+
+@{b}About:@{ub}
+  Load state from the command line.
+
+@{b}Usage:@{ub}
+  usage: <slot number>
+
+@{b}Examples:@{ub} 
+  fsuae-loadstate 1
+
+@endnode
+
+@node fsuae-dropdisk "FSUAE Tools Guide - fsuae-dropdisk"
+
+@{b}About:@{ub}
+  This has it's own guide in it's folder please read that instead.
+
+@endnode
+
+@node WBStartupExecute "FSUAE Tools Guide - WBStartupExecute"
+
+@{b}About:@{ub}
+  Much like S:Startup-Sequence or S:User-Startup it executes a script in the WBStartup folder.
+
+@{b}Examples:@{ub}
+  Create file S:User-WBStartup
+
+  mine looks like this;
+  Run >NIL: SYS:Bin/fsuae-hostrun "wmctrl -a 'FS-UAE · Amiga 4000' -b add,below" -- force the emulation to always be below all other windows.
+  Run >NIL: SYS:Bin/fsuae-setscreensaver 1 -- enable the host screen saver, so I can walk away from my PC for hours and go to actual WORK!
+
+
+  WBStartupExecute -> Copy to SYS:WBStartup
+  WBStartupExecute.info -> Copy to SYS:WBStartup
+
+@endnode

@@ -109,7 +109,7 @@ static int GetUAELibVersion(UBYTE *version) {
     return 0;
 }
 
-static int SetHostScreenSaver(UBYTE *state) {
+static int SetHostScreenSaver(ULONG state) {
     calltrap(129, state);
     return 0;
 }
@@ -144,12 +144,12 @@ static int RaiseWindowByIndex(ULONG index) {
     return 0;
 }
 
-static int SaveState(void) {
-    calltrap(136);
+static int SaveState(ULONG slot) {
+    calltrap(136,slot);
     return 0;
 }
 
-static int LoadState(void) {
-    calltrap(137);
+static int LoadState(ULONG slot) {
+    calltrap(137,slot);
     return 0;
 }

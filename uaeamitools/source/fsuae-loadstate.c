@@ -2,7 +2,7 @@
  * UAE - The U*nix Amiga Emulator                          *
  *                                                         *
  * fsuae-loadstate                                         *
- *             -- Executes a script from with in WBStartup *
+ *               -- Emulator Control from Inside Emulation *
  *  (c) 2023 T.J.Roughton <melonytr@gmail.com>             *
  *                                                         *
  * Version 0.x                                             *
@@ -22,7 +22,17 @@
 #include "include/uae_pragmas.h"
 
 int main(int argc,char *argv[]){
-  LoadState();
+
+  int slot;
+
+  if (!strcmp(argv[1],"/?") || !strcmp(argv[1],"")) {
+    printf("fsuae-loadstate v0.1 (c) 2023 T.J.Roughton\n");
+    printf("usage: <slot number>\n\n");
+  } else {
+    slot = atoi( argv[1] );
+    LoadState(slot);
+  }
+
   return 0;
 }
 

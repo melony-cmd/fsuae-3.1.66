@@ -45,18 +45,18 @@
 /*
  * Save State
  */
-static uae_u32 emulib_SaveState(void){
-	printf("UAELib - emulib_SaveState\n");
-	savestate_quick (0,1);
+static uae_u32 emulib_SaveState(uae_u32 emulib_slot){
+	printf("UAELib - emulib_SaveState(%d)\n",emulib_slot);
+	savestate_quick (emulib_slot,1);
 	return 0;
 }
 
 /*
  * Load State
  */
-static uae_u32 emulib_LoadState(void){
-	printf("UAELib - emulib_LoadState\n");
-	savestate_quick (0,0);
+static uae_u32 emulib_LoadState(uae_u32 emulib_slot){
+	printf("UAELib - emulib_LoadState(%d)\n",emulib_slot);
+	savestate_quick (emulib_slot,0);
 	return 0;
 }
 
@@ -279,7 +279,7 @@ static uae_u32 emulib_HostRunProgram (uaecptr program) {
 /*
 * Disable/Enable Screen Saver (SDL)
 */
-static uae_u32 emulib_HostScreenSaver(uaecptr state) {
+static uae_u32 emulib_HostScreenSaver(uae_u32 state) {
 
 	if(state==0) {
 		SDL_DisableScreenSaver();
@@ -749,8 +749,8 @@ static uae_u32 uaelib_demux_common(uae_u32 ARG0, uae_u32 ARG1, uae_u32 ARG2, uae
 		case 133: return emulib_GetX11WindowName(ARG1,ARG2);
 		case 134: return emulib_RaiseWindowByName(ARG1);
 		case 135: return emulib_RaiseWindowByIndex(ARG1);
-		case 136: return emulib_SaveState();
-		case 137: return emulib_LoadState();
+		case 136: return emulib_SaveState(ARG1);
+		case 137: return emulib_LoadState(ARG1);
 	}
 	return 0;
 }

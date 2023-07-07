@@ -1,5 +1,0 @@
-FROM LIB:c.o "fsuae-getx11windowlist.o"
-TO "fsuae-getx11windowlist"
-LIB LIB:sc.lib LIB:amiga.lib
-NOICONS
-

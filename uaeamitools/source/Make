@@ -34,7 +34,6 @@ sc WBStartup_Execute.c opt link to WBStartupExecute
 
 delete #?.o
 delete #?.lnk
-delete #?.info
 
 copy fsuae-hostrun sys:bin/
 copy fsuae-server sys:bin/
@@ -59,7 +58,9 @@ copy fsuae-libversion sys:bin/
 copy fsuae-setscreensaver sys:bin/
 copy fsuae-uaeconfig sys:bin/
 copy fsuae-getx11windowlist sys:bin/
-copy WBStartup_Execute sys:WBStartup/
-copy WBStartup_Execute.info sys:WBStartup/
+copy fsuae-savestate sys:bin/
+copy fsuae-loadstate sys:bin/
+copy WBStartupExecute sys:WBStartup/
+copy WBStartupExecute.info sys:WBStartup/
 
 

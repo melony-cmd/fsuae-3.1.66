@@ -31,7 +31,7 @@ int main(int argc,char *argv[]){
 
   int i = GetUaeConfig( &config );
 
-  printf("FSUAE Uaeconfig v%s\n",);
+  //printf("FSUAE Uaeconfig v%s\n",);
 
 
   printf("Version : %d\n",config.version);
