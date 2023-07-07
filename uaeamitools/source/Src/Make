@@ -1,0 +1,67 @@
+delete #?.o
+delete #?.lnk
+delete #?.info
+
+sc template.c opt link to UAETools:Source/template noicons
+sc uaectrl.c opt link to UAETools:Source/uaectrl noicons
+sc fsuae-hostrun.c opt link to UAETools:Source/fsuae-hostrun noicons
+sc fsuae-server.c opt link to UAETools:Source/fsuae-server noicons
+sc fsuae-insertdisk.c opt link to UAETools:Source/fsuae-insertdisk noicons
+sc fsuae-ejectdisk.c opt link to UAETools:Source/fsuae-ejectdisk noicons
+sc fsuae-hardreboot.c opt link to UAETools:Source/fsuae-hardreboot noicons
+sc fsuae-softreboot.c opt link to UAETools:Source/fsuae-softreboot noicons
+sc fsuae-disablesound.c opt link to UAETools:Source/fsuae-disablesound noicons
+sc fsuae-enablesound.c opt link to UAETools:Source/fsuae-enablesound noicons
+sc fsuae-debugmode.c opt link to UAETools:Source/fsuae-debug noicons
+sc fsuae-enablejoystick.c opt link to UAETools:Source/fsuae-enablejoystick noicons
+sc fsuae-disablejoystick.c opt link to UAETools:Source/fsuae-disablejoystick noicons
+sc fsuae-setframerate.c opt link to UAETools:Source/fsuae-setframerate noicons
+sc fsuae-changechip.c opt link to UAETools:Source/fsuae-changechip noicons
+sc fsuae-changefast.c opt link to UAETools:Source/fsuae-changefast noicons
+sc fsuae-changeslow.c opt link to UAETools:Source/fsuae-changeslow noicons
+sc fsuae-changelanguage.c opt link to UAETools:Source/fsuae-changelanguage noicons
+sc fsuae-exitemu.c opt link to UAETools:Source/fsuae-exitemu noicons
+sc fsuae-getdisk.c opt link to UAETools:Source/fsuae-getdisk noicons
+sc fsuae-version.c opt link to UAETools:Source/fsuae-version noicons
+sc fsuae-libversion.c opt link to UAETools:Source/fsuae-libversion noicons
+sc fsuae-setscreensaver.c opt link to UAETools:Source/fsuae-setscreensaver noicons
+sc fsuae-uaeconfig.c opt link to UAETools:Source/fsuae-uaeconfig noicons
+sc fsuae-getx11windowlist.c opt link to UAETools:Source/fsuae-getx11windowlist noicons
+sc fsuae-savestate.c opt link to UAETools:Source/fsuae-savestate noicons
+sc fsuae-loadstate.c opt link to UAETools:Source/fsuae-loadstate noicons
+
+sc WBStartup_Execute.c opt link to UAETools:Source/WBStartupExecute
+
+delete #?.o
+delete #?.lnk
+delete UAETools:Source/#?.lnk
+
+copy UAETools:Source/fsuae-hostrun sys:bin/
+copy UAETools:Source/fsuae-server sys:bin/
+copy UAETools:Source/fsuae-insertdisk sys:bin/
+copy UAETools:Source/fsuae-ejectdisk sys:bin/
+copy UAETools:Source/fsuae-hardreboot sys:bin/
+copy UAETools:Source/fsuae-softreboot sys:bin/
+copy UAETools:Source/fsuae-enablesound sys:bin/
+copy UAETools:Source/fsuae-disablesound sys:bin/
+copy UAETools:Source/fsuae-debug sys:bin/
+copy UAETools:Source/fsuae-enablejoystick sys:bin/
+copy UAETools:Source/fsuae-disablejoystick sys:bin/
+copy UAETools:Source/fsuae-setframerate sys:bin/
+copy UAETools:Source/fsuae-changechip sys:bin/
+copy UAETools:Source/fsuae-changefast sys:bin/
+copy UAETools:Source/fsuae-changeslow sys:bin/
+copy UAETools:Source/fsuae-changelanguage sys:bin/
+copy UAETools:Source/fsuae-exitemu sys:bin/
+copy UAETools:Source/fsuae-getdisk sys:bin/
+copy UAETools:Source/fsuae-version sys:bin/
+copy UAETools:Source/fsuae-libversion sys:bin/
+copy UAETools:Source/fsuae-setscreensaver sys:bin/
+copy UAETools:Source/fsuae-uaeconfig sys:bin/
+copy UAETools:Source/fsuae-getx11windowlist sys:bin/
+copy UAETools:Source/fsuae-savestate sys:bin/
+copy UAETools:Source/fsuae-loadstate sys:bin/
+copy UAETools:Source/WBStartupExecute sys:WBStartup/
+copy UAETools:Source/WBStartupExecute.info sys:WBStartup/
+
+
