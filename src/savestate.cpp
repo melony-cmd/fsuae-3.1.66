@@ -1830,7 +1830,7 @@ void savestate_init (void)
 
 
 void statefile_save_recording (const TCHAR *filename)
-{
+{savestate_state
 	if (!staterecord_statefile)
 		return;
 	struct zfile *zf = zfile_fopen (filename, _T("wb"), 0);
@@ -1842,7 +1842,7 @@ void statefile_save_recording (const TCHAR *filename)
 		zfile_fclose (zf);
 		write_log (_T("input statefile '%s' saved\n"), filename);
 	}
-}
+}savestate_state
 
 
 /*
@@ -1908,7 +1908,7 @@ VBR                     4
 68020+:
 
 CAAR                    4
-CACR                    4
+CACR                    4savestate_state
 MSP                     4
 
 68030+:
@@ -1947,7 +1947,7 @@ FPU (only if used)
 FPU model               4 (68881/68882/68040/68060)
 FPU typeflags           4 (bit 31 = clock rate included)
 FP0-FP7                 4+4+2 (80 bits)
-FPCR                    4
+FPCR                    4savestate_state
 FPSR                    4
 FPIAR                   4
 
@@ -1968,7 +1968,7 @@ CUSTOM CHIPS
 chipset flags   4      OCS=0,ECSAGNUS=1,ECSDENISE=2,AGA=4
 ECSAGNUS and ECSDENISE can be combined
 
-DFF000-DFF1FF   352    (0x120 - 0x17f and 0x0a0 - 0xdf excluded)
+DFF000-DFF1FF   352    (0x120 - 0x17f and 0x0a0 - 0xdf excluded)savestate_state
 
 sprite registers (0x120 - 0x17f) saved with SPRx chunks
 audio registers (0x0a0 - 0xdf) saved with AUDx chunks
@@ -2022,7 +2022,7 @@ internal blitter state
 flags                   4
 bit 0=blitter active
 bit 1=fill carry bit
-internal ahold          4
+internal ahold          4savestate_state
 internal bhold          4
 internal hsize          2
 internal vsize          2
@@ -2045,7 +2045,7 @@ bit 0=tod latched (read)
 bit 1=tod stopped (write)
 div10 counter	1 BYTE
 
-FLOPPY DRIVES
+FLOPPY DRIVESsavestate_state
 
 "DSK0" "DSK1" "DSK2" "DSK3"
 

@@ -3,10 +3,8 @@
 
 [fs-uae]
 amiga_model = A4000
-chip_memory = 2048
 clipboard_sharing = 1
 cpu = 68040
-fast_memory = 4096
 floppy_drive_count = 4
 floppy_drive_speed = 0
 floppy_drive_volume = 0

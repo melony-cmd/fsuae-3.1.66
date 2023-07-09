@@ -2,7 +2,6 @@
 # Last saved: 2023-06-27 03:22:46
 
 [fs-uae]
-chip_memory = 512
 clipboard_sharing = 1
 cpu = 68000
 floppy_drive_count = 4

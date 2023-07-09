@@ -3,10 +3,8 @@
 
 [fs-uae]
 amiga_model = A1000
-chip_memory = 512
 clipboard_sharing = 1
 cpu = 68000
-fast_memory = 1024
 floppy_drive_count = 4
 floppy_drive_speed = 0
 floppy_drive_volume = 0

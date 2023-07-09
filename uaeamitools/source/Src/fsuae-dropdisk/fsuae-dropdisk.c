@@ -93,6 +93,34 @@ static const char *cyPlatforms[] = {"A1000",
 	                                  "Custom",
 	                                  NULL};
 
+// DEFAULT MEMORY SETTINGS SET WHEN CHANGING PLATFORMS
+static const int cyPDefaultCMem[] = {0,              // A1000
+	                                   1,              // A2000
+	                                   1,              // A2000A
+	                                   1,              // A2500HD
+	                                   0,              // A500
+	                                   1,              // A3000
+	                                   1,              // A500+
+	                                   1,              // A600
+	                                   2,              // A4000
+	                                   2,              // A1200
+	                                   0,              // Custom
+	                                   NULL};                
+
+static const int cyPDefaultFMem[] = {0,              // A1000
+	                                   0,              // A2000
+	                                   0,              // A2000A
+	                                   0,              // A2500HD
+	                                   0,              // A500
+	                                   1,              // A3000
+	                                   0,              // A500+
+	                                   0,              // A600
+	                                   0,              // A4000
+	                                   0,              // A1200
+	                                   0,              // Custom
+	                                   NULL};                
+
+
 static const char *cyChipRam[] = {"512",
 	                                "1024",
 	                                "2048",
@@ -100,6 +128,7 @@ static const char *cyChipRam[] = {"512",
                                   NULL};
 
 static const char *cyFastRam[] = {"0",
+	                                "1024",
 	                                "2048",
 	                                "4096",
 	                                "8192",
@@ -368,19 +397,25 @@ int Boot(int platformnum,int chipnum,int fastnum,struct List *list){
       }
       Write(fd_write,"\n",1);
 
-      // now we get all the disks that (might be added in the listview and add them to the outbound configuration file!)
 
       //floppy_image_#
 			//if (node = Get_Node (list,0)) {
 			//GT_SetGadgetAttrs (strgad,win,NULL,GTST_String,node->ln_Name,GA_Disabled,FALSE,TAG_END);
 			//}
-/*
+
+      // Write the memory settings.
+      
       sprintf(buffer,"chip_memory = %s\n",cyChipRam[chipnum]);
       Write(fd_write,buffer,strlen(buffer));
 
       sprintf(buffer,"fast_memory = %s\n",cyFastRam[fastnum]);
       Write(fd_write,buffer,strlen(buffer));
-*/
+
+      sprintf(buffer,"slow_memory = 0\n");
+      Write(fd_write,buffer,strlen(buffer));
+
+      // now we get all the disks that (might be added in the listview and add them to the outbound configuration file!)
+
       while(node = Get_Node(list,ni)) {
         if(ni==0) {
           sprintf(buffer,"floppy_drive_0 = %s\n",node->ln_Name);
@@ -391,6 +426,7 @@ int Boot(int platformnum,int chipnum,int fastnum,struct List *list){
         Write(fd_write,buffer,strlen(buffer));
         ni++;
       }
+
 
 
       Close(fd_read);
@@ -659,8 +695,12 @@ int main (int argc,char *argv[])	{
                         break;
 
                         case GID_PLATFORM:
-                          //GT_GetGadgetAttrs (cygad_platform,win,NULL,GTCY_Active,&num,TAG_END);
-                          //printf("%s\n",cyPlatforms[num]);
+                          GT_GetGadgetAttrs (cygad_platform,win,NULL,GTCY_Active,&num,TAG_END);
+                          printf("%s %d\n",cyPlatforms[num],num);
+                          
+                          GT_SetGadgetAttrs (cygad_chipram,win,NULL,GTCY_Active,cyPDefaultCMem[num],TAG_END);
+                          GT_SetGadgetAttrs (cygad_fastram,win,NULL,GTCY_Active,cyPDefaultFMem[num],TAG_END);
+
                         break;
 
                         case GID_BOOT:
