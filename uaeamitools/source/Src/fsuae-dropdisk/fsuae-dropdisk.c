@@ -26,6 +26,7 @@
 #include <proto/gadtools.h>
 #include <proto/utility.h>
 #include <proto/asl.h>
+#include <clib/wb_protos.h>
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
@@ -49,6 +50,7 @@
 /*----------------------------------------------------------------------------*/
 #define APP_WINDOW_ID   1
 
+#define MAXDISKTYPES    5
 /*----------------------------------------------------------------------------*/
 /* Gadget IDs                                                                 */
 /*----------------------------------------------------------------------------*/
@@ -141,6 +143,12 @@ static const char *cyFastRam[] = {"0",
 	                                "8192",
                                   NULL};
 
+static const char *diskTypes[] = {".adf",
+                                  ".adz",
+                                  ".dms",
+                                  ".ipf",
+                                  ".zip",
+                                  NULL};
 
 char configfile [] = {"fsuae-dropdisk.cfg"};
 char amiga_tmpfolderpath[256];
@@ -290,6 +298,57 @@ void getfsuae_configlist(void) {
   UnLock(lock);
   */
 }
+
+/*----------------------------------------------------------------------------*/
+/* Fix File Path                                                              */
+/*----------------------------------------------------------------------------*/
+void FixFile_Path(char *amifilepath,char *amifile,struct List *flist,struct List *dflist){
+	char fn_name[256];
+	char pf_name[256];
+  char prefbuffer[256];
+  char devassign[256];
+  char remdevassign[256];
+  int expos = getCharPosition(amifile,'.');
+  char exbuf[16];
+  int i;
+  
+  // Check for extension existance.
+  if(expos!=-1) {
+    printf("-- FixFile_Path --\n");
+    printf("- amifilepath = %s --\n",amifilepath);
+
+    copySubstring(amifilepath,devassign,0,getCharPosition(amifilepath,':')+1);
+
+    printf("- devassign = %s\n",devassign);
+
+    copySubstring(amifilepath,remdevassign,getCharPosition(amifilepath,':')+1,strlen(amifilepath));
+
+    printf("- remdevassign = %s\n",remdevassign);
+
+    ReadConfig(configfile,devassign,"Path",prefbuffer,256,"(unknown)");
+
+    sprintf(fn_name,"%s",amifile);
+    sprintf(pf_name,"%s/%s",prefbuffer,remdevassign);  
+
+    printf("- fn_name = %s\n",fn_name);
+    printf("- pf_name = %s\n",pf_name);
+    printf("- . = %d\n",expos);
+
+    copySubstring(fn_name,exbuf,expos,4);
+
+    // check all supported formats that I know about.
+    for(i=0;i<MAXDISKTYPES;i++) {
+      printf("-- (%s) (%s)\n",diskTypes[i],exbuf);
+      if(Stricmp((STRPTR) diskTypes[i],(STRPTR) exbuf)==0) {
+        printf("format ident confirmed!\n");
+        // Add them to the list.
+        Add_NodeName(flist,fn_name);              // ListView_Kind -- list (ONLY!)
+        Add_NodeName(dflist,pf_name);             // Path file List
+      }
+    }
+  }
+}
+
 
 /*----------------------------------------------------------------------------*/
 /* Get File(s) from ASL
@@ -682,16 +741,15 @@ int main (int argc,char *argv[])	{
                   if (awmsg = (struct AppMessage *)GetMsg(awmp)) {
                     if (awmsg->am_Type == AMTYPE_APPWINDOW) {
                       if(awmsg->am_NumArgs>0L) {
-                        for(loop=0;loop<awmsg->am_NumArgs;loop++) {
+                        for(loop=0;loop<awmsg->am_NumArgs;loop++) {                        
                           if (awmsg->am_ArgList[loop].wa_Lock) {
-                            // Add Path                            
+                            // Get Path                            
                             NameFromLock(awmsg->am_ArgList[loop].wa_Lock,dropfilename,4096);
-                            Add_NodeName(&fplist,dropfilename);
-                            printf("f=%s\n",dropfilename);
-
+                            
                             // Add FileName
                             AddPart(dropfilename,awmsg->am_ArgList[loop].wa_Name,4096);                            
-                            Add_NodeName(&lvlist,awmsg->am_ArgList[loop].wa_Name);
+
+                            FixFile_Path(dropfilename,awmsg->am_ArgList[loop].wa_Name,&lvlist,&fplist);
                           }
                         }
                         GT_SetGadgetAttrs (lvgad,win,NULL,GTLV_Labels,&lvlist,GTLV_Selected,-1,TAG_END);
