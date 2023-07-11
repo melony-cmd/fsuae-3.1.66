@@ -1,5 +1,5 @@
 /*----------------------------------------------------------------------------*/
-/* Drop Disk v0.1                                                             */
+/* Drop Disk v0.2                                                             */
 /*  By T.J.Roughton (c) 2023                                                  */
 /*                                                                            */
 /* Notes:                                                                     */
@@ -9,8 +9,11 @@
 /* Need some tomfoolery configuration file that replaces Dev/Assign with the  */
 /* host path, or it will never find anything to insert as a disk              */
 /*                                                                            */
-/* TODO:                                                                      */
-/*  CHIP/FAST need default value for each platform.                           */
+/* MAJOR BUG:                                                                 */
+/* -- for some reason the ui size is not consistant when running on other     */
+/*    emulation installs..                                                    */
+/*                                                                            */
+/*                                                                            */
 /*----------------------------------------------------------------------------*/
 
 /*----------------------------------------------------------------------------*/
@@ -44,6 +47,12 @@
 /*----------------------------------------------------------------------------*/
 #include "config.h"
 
+/*----------------------------------------------------------------------------*/
+/* VERSION                                                                    */
+/*----------------------------------------------------------------------------*/
+#define VERMAJOR           0
+#define VERMINOR           0
+#define VERBETA            4
 
 /*----------------------------------------------------------------------------*/
 /* IDs                                                                        */
@@ -314,25 +323,25 @@ void FixFile_Path(char *amifilepath,char *amifile,struct List *flist,struct List
   
   // Check for extension existance.
   if(expos!=-1) {
-    printf("-- FixFile_Path --\n");
-    printf("- amifilepath = %s --\n",amifilepath);
+    //printf("-- FixFile_Path --\n");
+    //printf("- amifilepath = %s --\n",amifilepath);
 
     copySubstring(amifilepath,devassign,0,getCharPosition(amifilepath,':')+1);
 
-    printf("- devassign = %s\n",devassign);
+    //printf("- devassign = %s\n",devassign);
 
     copySubstring(amifilepath,remdevassign,getCharPosition(amifilepath,':')+1,strlen(amifilepath));
 
-    printf("- remdevassign = %s\n",remdevassign);
+    //printf("- remdevassign = %s\n",remdevassign);
 
     ReadConfig(configfile,devassign,"Path",prefbuffer,256,"(unknown)");
 
     sprintf(fn_name,"%s",amifile);
     sprintf(pf_name,"%s/%s",prefbuffer,remdevassign);  
 
-    printf("- fn_name = %s\n",fn_name);
-    printf("- pf_name = %s\n",pf_name);
-    printf("- . = %d\n",expos);
+    //printf("- fn_name = %s\n",fn_name);
+    //printf("- pf_name = %s\n",pf_name);
+    //printf("- . = %d\n",expos);
 
     copySubstring(fn_name,exbuf,expos,4);
 
@@ -340,7 +349,7 @@ void FixFile_Path(char *amifilepath,char *amifile,struct List *flist,struct List
     for(i=0;i<MAXDISKTYPES;i++) {
       printf("-- (%s) (%s)\n",diskTypes[i],exbuf);
       if(Stricmp((STRPTR) diskTypes[i],(STRPTR) exbuf)==0) {
-        printf("format ident confirmed!\n");
+        //printf("format ident confirmed!\n");
         // Add them to the list.
         Add_NodeName(flist,fn_name);              // ListView_Kind -- list (ONLY!)
         Add_NodeName(dflist,pf_name);             // Path file List
@@ -517,15 +526,25 @@ int Boot(int platformnum,int chipnum,int fastnum,struct List *list){
 }
 
 /*----------------------------------------------------------------------------*/
+/* Make Gadget
+/*----------------------------------------------------------------------------*/
+struct Gadget *Make_Gadget(int type,int id,int x, int y,int w, int h,char *text) {
+
+}
+
+/*----------------------------------------------------------------------------*/
 /* Main Program
 /*----------------------------------------------------------------------------*/
 int main (int argc,char *argv[])	{
 	struct Screen *scr;
 	struct Window *win;
+  struct TextAttr Topaz80 = { "topaz.font", 8, 0, 0, };
 	struct NewGadget ng;
 
   struct MsgPort *awmp = NULL;
   struct AppMessage *awmsg=NULL;
+
+  char wintitle[126];
   int loop;
 
 	ULONG winsig;
@@ -545,10 +564,23 @@ int main (int argc,char *argv[])	{
   struct Node *node;
 	ULONG fontw,fonth;
 	ULONG winw,winh;
+  ULONG wa_width = 332;
+  ULONG wa_height = 190;
+
 	struct IntuiMessage *imsg;
 	ULONG num = NULL;
   ULONG chipcynum = NULL;
   ULONG fastcynum = NULL;
+
+  /** HERE ** Check UAELibVerson why? .. well unless you're using my custom build of FS-UAE the "Boot" button shouldn't do
+                                         anything at all. 
+  */
+  char version[16];
+
+  GetUAELibVersion(&version);
+  // printf("UAELib v%s\n",version);
+  // v0.3.2 == enable boot if version string is > 0
+  // v == disable boot if version string is = 0
 
 	NewList (&lvlist);        // Filename list;
                             // This list is for exclusive use of LISTVIEW_KIND (only!) do not refer to it to do anything functional.
@@ -575,33 +607,31 @@ int main (int argc,char *argv[])	{
 		gad = CreateContext (&glist);
 
 		ng.ng_VisualInfo = GetVisualInfo (scr,TAG_END);
-		ng.ng_TextAttr   = scr->Font;
+    ng.ng_TextAttr   = &Topaz80;
 		ng.ng_Flags      = 0;
 
-		fontw = scr->RastPort.TxWidth;
-		fonth = scr->RastPort.TxHeight;
+		fontw = 8; //scr->RastPort.TxWidth;
+		fonth = 8; //scr->RastPort.TxHeight;
 
-		winw = scr->WBorTop + fonth + 5;  /* top of listview */
-		winh = 20 * fonth + 4;            /* height of listview */
+		winw = scr->WBorTop + fonth + 5;  
+		winh = 10 * fonth + 4;            
 
-		ng.ng_LeftEdge   = scr->WBorLeft + 4;
-		ng.ng_TopEdge    = winw + winh;
+		ng.ng_LeftEdge   = 8;             
+		ng.ng_TopEdge    = winw + winh;   
 		ng.ng_Height     = fonth + 6;
-		ng.ng_Width      = 316; //3*16 * fontw + 3*8 + 2*4;
+		ng.ng_Width      = 320-4;
 		ng.ng_GadgetText = NULL;
 		ng.ng_GadgetID   = GID_STRING;
 		gad = CreateGadget (STRING_KIND,gad,&ng,GA_Disabled,TRUE,TAG_END);
-		//strgad = gad;
 
 		ng.ng_TopEdge    = winw;
-		ng.ng_Height    += winh;      /* including string height */
+		ng.ng_Height    += winh;      
 		ng.ng_GadgetID   = GID_LIST;
 		gad = CreateGadget (LISTVIEW_KIND,gad,&ng,GTLV_Labels,&lvlist,GTLV_ShowSelected,gad,TAG_END);
 		lvgad = gad;
 
-    // ROW 1
     ng.ng_TopEdge   += ng.ng_Height + 4;
-		ng.ng_Width      = 2 * fontw + 13;
+		ng.ng_Width      = fontw * 3;
 		ng.ng_Height     = fonth + 6;
 		ng.ng_GadgetText = "+";
 		ng.ng_GadgetID   = GID_ADD;
@@ -618,38 +648,37 @@ int main (int argc,char *argv[])	{
 		gad = CreateGadget (BUTTON_KIND,gad,&ng,TAG_END);
 
     ng.ng_LeftEdge  += ng.ng_Width + 4;
-		ng.ng_Width      = 8 * fontw + 13;
+		ng.ng_Width      = fontw * 10 + 2;
 		ng.ng_GadgetID   = GID_PLATFORM;
     ng.ng_GadgetText = "";
-		gad = CreateGadget (CYCLE_KIND,gad,&ng,GTCY_Labels,&cyPlatforms,TAG_END); // cyPlatforms
+		gad = CreateGadget (CYCLE_KIND,gad,&ng,GTCY_Labels,&cyPlatforms,TAG_END);
     cygad_platform = gad;
 
     ng.ng_LeftEdge  += ng.ng_Width + 4;
-		ng.ng_Width      = 7 * fontw + 10;
+		ng.ng_Width      = fontw * 9 - 1;
 		ng.ng_GadgetID   = GID_CHIPRAM;
     ng.ng_GadgetText = "";
-		gad = CreateGadget (CYCLE_KIND,gad,&ng,GTCY_Labels,&cyChipRam,TAG_END); // cyPlatforms
+		gad = CreateGadget (CYCLE_KIND,gad,&ng,GTCY_Labels,&cyChipRam,TAG_END);
     cygad_chipram = gad;
 
     ng.ng_LeftEdge  += ng.ng_Width + 4;
-		ng.ng_Width      = 7 * fontw + 10;
+		//ng.ng_Width      = fontw *4;
 		ng.ng_GadgetID   = GID_FASTRAM;
     ng.ng_GadgetText = "";
-		gad = CreateGadget (CYCLE_KIND,gad,&ng,GTCY_Labels,&cyFastRam,TAG_END); // cyPlatforms
+		gad = CreateGadget (CYCLE_KIND,gad,&ng,GTCY_Labels,&cyFastRam,TAG_END);
     cygad_fastram = gad;
 
     ng.ng_TopEdge   += ng.ng_Height + 4;
     ng.ng_LeftEdge   = scr->WBorLeft + 4;
-		ng.ng_Width      = 39 * fontw + 4;
+		ng.ng_Width      = wa_width-16;
 		ng.ng_Height     = fonth + 6;
 		ng.ng_GadgetText = "Boot";
 		ng.ng_GadgetID   = GID_BOOT;
 		gad = CreateGadget (BUTTON_KIND,gad,&ng,TAG_END);
 
-    // ROW 3
     ng.ng_TopEdge   += ng.ng_Height + 4;
     ng.ng_LeftEdge   = scr->WBorLeft + 4;
-		ng.ng_Width      = 7 * fontw + 20;
+		ng.ng_Width      = fontw * 9 + 4;
 		ng.ng_Height     = fonth + 6;
 		ng.ng_GadgetText = "DF0:";
 		ng.ng_GadgetID   = GID_INSERTDF0;
@@ -670,10 +699,9 @@ int main (int argc,char *argv[])	{
 		ng.ng_GadgetID   = GID_INSERTDF3;
 		gad = CreateGadget (BUTTON_KIND,gad,&ng,TAG_END);
 
-    // ROW 4
     ng.ng_TopEdge   += ng.ng_Height + 4;
     ng.ng_LeftEdge   = scr->WBorLeft + 4;
-		ng.ng_Width      = 7 * fontw + 20;
+		ng.ng_Width      = fontw * 9 + 4;
 		ng.ng_Height     = fonth + 6;
 		ng.ng_GadgetText = "Eject";
 		ng.ng_GadgetID   = GID_EJECTDF0;
@@ -694,7 +722,6 @@ int main (int argc,char *argv[])	{
 		ng.ng_GadgetID   = GID_EJECTDF3;
 		gad = CreateGadget (BUTTON_KIND,gad,&ng,TAG_END);
 
-
 	  filereq = AllocAslRequestTags (ASL_FileRequest,
 		  ASLFR_InitialLeftEdge,(scr->Width - winw) / 2,
 		  ASLFR_InitialTopEdge,(scr->Height - winh) / 2,
@@ -702,16 +729,18 @@ int main (int argc,char *argv[])	{
 		  ASLFR_InitialHeight,500,
 		  TAG_END);
 
+    sprintf(wintitle,"FSUAE DropDisk v%d.%d.%d",VERMAJOR,VERMINOR,VERBETA);
+
 		if (gad) {
 			winw = 332; //ng.ng_LeftEdge + ng.ng_Width + 4 + scr->WBorRight;
-			winh = 270; //ng.ng_TopEdge + ng.ng_Height + 4 + scr->WBorBottom;
+			winh = 200; //ng.ng_TopEdge + ng.ng_Height + 4 + scr->WBorBottom;
 
       if (awmp = CreateMsgPort()) {
 
 			  if (win = OpenWindowTags (NULL,
-			  		WA_Title,"FSUAE DropDisk v0.1",
-			  		WA_Width,winw,
-			  		WA_Height,winh,
+			  		WA_Title,wintitle,
+			  		WA_Width,wa_width,
+			  		WA_Height,wa_height,
 			  		WA_Left,(scr->Width - winw) / 3,
 			  		WA_Top,(scr->Height - winh) / 3,
 			  		WA_Flags,WFLG_CLOSEGADGET | WFLG_DRAGBAR | WFLG_DEPTHGADGET | WFLG_ACTIVATE,
