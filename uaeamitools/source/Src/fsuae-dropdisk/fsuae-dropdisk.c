@@ -11,8 +11,9 @@
 /*                                                                            */
 /* MAJOR BUG:                                                                 */
 /* -- for some reason the ui size is not consistant when running on other     */
-/*    emulation installs..                                                    */
-/*                                                                            */
+/*    emulation installs.. -- fixed it thank goodness I don't have to rewrite */
+/*    in the trash MUI, not that I could get it to even compile example code  */
+/*    anyway, because gcc sucks too.                                          */
 /*                                                                            */
 /*----------------------------------------------------------------------------*/
 
@@ -526,13 +527,6 @@ int Boot(int platformnum,int chipnum,int fastnum,struct List *list){
 }
 
 /*----------------------------------------------------------------------------*/
-/* Make Gadget
-/*----------------------------------------------------------------------------*/
-struct Gadget *Make_Gadget(int type,int id,int x, int y,int w, int h,char *text) {
-
-}
-
-/*----------------------------------------------------------------------------*/
 /* Main Program
 /*----------------------------------------------------------------------------*/
 int main (int argc,char *argv[])	{
@@ -571,6 +565,7 @@ int main (int argc,char *argv[])	{
 	ULONG num = NULL;
   ULONG chipcynum = NULL;
   ULONG fastcynum = NULL;
+  BOOL bootstate = TRUE;
 
   /** HERE ** Check UAELibVerson why? .. well unless you're using my custom build of FS-UAE the "Boot" button shouldn't do
                                          anything at all. 
@@ -578,6 +573,11 @@ int main (int argc,char *argv[])	{
   char version[16];
 
   GetUAELibVersion(&version);
+
+  if(strlen(version)==4){
+    //printf("Well, Bullocks... you're not using the updated uaelib fsuae, I strike thee down with a slap! noo boot option for thee.\n");
+    bootstate = FALSE;
+  }
   // printf("UAELib v%s\n",version);
   // v0.3.2 == enable boot if version string is > 0
   // v == disable boot if version string is = 0
@@ -674,7 +674,11 @@ int main (int argc,char *argv[])	{
 		ng.ng_Height     = fonth + 6;
 		ng.ng_GadgetText = "Boot";
 		ng.ng_GadgetID   = GID_BOOT;
-		gad = CreateGadget (BUTTON_KIND,gad,&ng,TAG_END);
+		if(bootstate==TRUE) {
+      gad = CreateGadget (BUTTON_KIND,gad,&ng,TAG_END);
+    } else {
+		  gad = CreateGadget (BUTTON_KIND,gad,&ng,GA_Disabled,TRUE,TAG_END);
+    }
 
     ng.ng_TopEdge   += ng.ng_Height + 4;
     ng.ng_LeftEdge   = scr->WBorLeft + 4;
