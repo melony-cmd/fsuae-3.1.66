@@ -73,6 +73,7 @@
 #define GID_CHIPRAM     1007
 #define GID_FASTRAM     1008
 #define GID_BOOT        1009
+#define GID_DISPLAY     1010
 
 #define GID_INSERTDF0   2000
 #define GID_INSERTDF1   2001
@@ -164,10 +165,58 @@ char configfile [] = {"fsuae-dropdisk.cfg"};
 char amiga_tmpfolderpath[256];
 char host_tmpfolderpath[256];
 char asldefaultdir[256];
+char display[256];
+
 int defaultPlatform;
 
 struct AppWindow *AppWin = NULL;
 char dropfilename[4096+1];
+
+/*----------------------------------------------------------------------------*/
+/* String Field -- because I miss my PureBasic tools.
+/*----------------------------------------------------------------------------*/
+char *StrField(char *string,int index,char *delim) {
+  int i,buflen=0;
+  char *buf;
+  char *token;
+/*
+  printf("%s\n",strtok(string,delim));
+  buflen = strlen(strtok(string,delim));
+  printf("buflen = %d\n",buflen);
+
+  printf("%s\n",strtok(string+5,delim));
+  buflen = strlen(strtok(string+5,delim));
+  printf("buflen = %d\n",buflen);
+
+  printf("%s\n",strtok(string+7,delim));
+  buflen = strlen(strtok(string+7,delim));
+  printf("buflen = %d\n",buflen);
+
+  printf("%s\n",strtok(string+11,delim));
+  buflen = strlen(strtok(string+11,delim));
+  printf("buflen = %d\n",buflen);
+
+  printf("%s\n",strtok(string+15,delim));
+  buflen = strlen(strtok(string+15,delim));
+  printf("buflen = %d\n",buflen);
+*/
+  token = strtok(string, ",");
+
+  if (token == NULL) {
+    return "";
+  }
+
+  if(index==0) {
+    return token;
+  }
+
+  for(i = 0; i<index+1; i++) {
+    puts(token);
+    token = strtok(NULL, delim);
+  }
+
+  return token;
+}
 
 /*----------------------------------------------------------------------------*/
 /* Copy part of a string to another
@@ -448,17 +497,22 @@ void InsertFloppy(int selection,int gadid,struct List *list){
 /* Boot!                                                                      */
 /*  -- now the fun can start  :)                                              */
 /*----------------------------------------------------------------------------*/
-int Boot(int platformnum,int chipnum,int fastnum,struct List *list){
+int Boot(int platformnum,int chipnum,int fastnum,struct List *list,STRPTR cfgdisplay){
 
   char cfgfile[256];
   char tmpfile[256];
   char hostboot[1024];
+  char bufcfgdisplay[128];
+
   int fd_read;
   int fd_bytesread;
   int fd_write;
   char buffer[256];
   struct Node *node;
   int ni = NULL;
+  char *dispmode;
+
+  strcpy(bufcfgdisplay,cfgdisplay);
 
   sprintf(cfgfile,"Configurations/%s.fs-uae",cyPlatforms[platformnum]);
   //printf("cfgfile = %s\n",cfgfile);
@@ -493,6 +547,43 @@ int Boot(int platformnum,int chipnum,int fastnum,struct List *list){
       sprintf(buffer,"slow_memory = 0\n");
       Write(fd_write,buffer,strlen(buffer));
 
+      // window_x
+      // window_y
+      // window_width
+      // window_height
+      // fullscreen = f / window = w
+      if(strcmp(cfgdisplay,"<using config>")){
+
+        sprintf(buffer,"window_x = %s\n",strtok(bufcfgdisplay,","));
+        Write(fd_write,buffer,strlen(buffer));
+
+        sprintf(buffer,"window_y = %s\n",strtok(NULL,","));
+        Write(fd_write,buffer,strlen(buffer));
+
+        sprintf(buffer,"window_width = %s\n",strtok(NULL,","));
+        Write(fd_write,buffer,strlen(buffer));
+
+        sprintf(buffer,"window_height = %s\n",strtok(NULL,","));
+        Write(fd_write,buffer,strlen(buffer));
+
+        dispmode = strtok(NULL,",");
+
+        //printf("{ %d }\n",stricmp(dispmode,"w"));
+
+        if(stricmp(dispmode,"w")==0) {
+          sprintf(buffer,"fullscreen = 0\n");
+          Write(fd_write,buffer,strlen(buffer));
+        }
+
+        if(stricmp(dispmode,"f")==0) {
+          sprintf(buffer,"fullscreen = 1\n");
+          Write(fd_write,buffer,strlen(buffer));
+        }
+
+      } else {
+        //printf("Do not Write Display Config\n");
+      }
+
       // now we get all the disks that (might be added in the listview and add them to the outbound configuration file!)
 
       while(node = Get_Node(list,ni)) {
@@ -513,9 +604,11 @@ int Boot(int platformnum,int chipnum,int fastnum,struct List *list){
 
       //printf("\nfs-uae %s/temp_config.fs-uae\n",host_tmpfolderpath);
 
+
       sprintf(hostboot,"fs-uae %s/temp_config.fs-uae",host_tmpfolderpath);
 
       HostRunProgram(hostboot);
+
     } else {
       //printf("Cannot find %s\n",cfgfile);
     }
@@ -550,6 +643,9 @@ int main (int argc,char *argv[])	{
 	struct Gadget *cygad_platform;
 	struct Gadget *cygad_chipram;
 	struct Gadget *cygad_fastram;
+	struct Gadget *strgad_display;
+  STRPTR str_display;
+
 	struct FileRequester *filereq;	
 
   struct List lvlist;
@@ -582,6 +678,9 @@ int main (int argc,char *argv[])	{
   // v0.3.2 == enable boot if version string is > 0
   // v == disable boot if version string is = 0
 
+
+  
+
 	NewList (&lvlist);        // Filename list;
                             // This list is for exclusive use of LISTVIEW_KIND (only!) do not refer to it to do anything functional.
 
@@ -594,6 +693,7 @@ int main (int argc,char *argv[])	{
   ReadConfig(configfile,"SETTINGS","AmigaTempFolder",amiga_tmpfolderpath,256,"(unknown)");
   ReadConfig(configfile,"SETTINGS","HostTempFolder",host_tmpfolderpath,256,"(unknown)");
   ReadConfig(configfile,"SETTINGS","ASLDefaultDir",asldefaultdir,256,"#?");
+  ReadConfig(configfile,"SETTINGS","Display",display,256,"<using config>");
 
   defaultPlatform = ReadConfigNumber(configfile,"SETTINGS","DefaultPlatform",3);
 
@@ -670,7 +770,7 @@ int main (int argc,char *argv[])	{
 
     ng.ng_TopEdge   += ng.ng_Height + 4;
     ng.ng_LeftEdge   = scr->WBorLeft + 4;
-		ng.ng_Width      = wa_width-16;
+		ng.ng_Width      = wa_width / 3;
 		ng.ng_Height     = fonth + 6;
 		ng.ng_GadgetText = "Boot";
 		ng.ng_GadgetID   = GID_BOOT;
@@ -679,6 +779,14 @@ int main (int argc,char *argv[])	{
     } else {
 		  gad = CreateGadget (BUTTON_KIND,gad,&ng,GA_Disabled,TRUE,TAG_END);
     }
+
+    ng.ng_LeftEdge   = wa_width / 3 + 12;
+		ng.ng_Height     = fonth + 6;
+		ng.ng_Width      = 202;
+		ng.ng_GadgetText = NULL;
+		ng.ng_GadgetID   = GID_DISPLAY;
+		gad = CreateGadget (STRING_KIND,gad,&ng,TAG_END);
+    strgad_display = gad;
 
     ng.ng_TopEdge   += ng.ng_Height + 4;
     ng.ng_LeftEdge   = scr->WBorLeft + 4;
@@ -757,11 +865,13 @@ int main (int argc,char *argv[])	{
               AppWin = AddAppWindowA( APP_WINDOW_ID, 0, win, awmp, NULL);
 
               GT_SetGadgetAttrs (cygad_platform,win,NULL,GTCY_Active,defaultPlatform,TAG_END);
+              GT_SetGadgetAttrs (strgad_display,win,NULL,GTST_String,&display,TAG_END);
               GT_RefreshWindow (win,NULL);
 			  	    winsig = 1L << win->UserPort->mp_SigBit;
               appsig = 1L << awmp->mp_SigBit;
 
 			  	    cont = TRUE;
+
 
 			  	    do {
 			  		    sigs = Wait (winsig | appsig | SIGBREAKF_CTRL_C);
@@ -770,7 +880,7 @@ int main (int argc,char *argv[])	{
 
                 // DROP ICON SIGNALS
                 if (sigs & appsig) {
-                  printf("Icon Dropped %d\n",sigs);
+                  //printf("Icon Dropped %d\n",sigs);
                   if (awmsg = (struct AppMessage *)GetMsg(awmp)) {
                     if (awmsg->am_Type == AMTYPE_APPWINDOW) {
                       if(awmsg->am_NumArgs>0L) {
@@ -813,7 +923,6 @@ int main (int argc,char *argv[])	{
                             node = Get_Node (&lvlist,num);
            									if (node)	{
                               Delete_Node(Get_Node(&fplist,num));
-
           										GT_SetGadgetAttrs (lvgad,win,NULL,GTLV_Labels,-1,TAG_END);
 			  							        node = Delete_Node(node);
   
@@ -846,7 +955,10 @@ int main (int argc,char *argv[])	{
                             GT_GetGadgetAttrs (cygad_platform,win,NULL,GTCY_Active,&num,TAG_END);
                             GT_GetGadgetAttrs (cygad_chipram,win,NULL,GTCY_Active,&chipcynum,TAG_END);
                             GT_GetGadgetAttrs (cygad_fastram,win,NULL,GTCY_Active,&fastcynum,TAG_END);
-                            Boot(num,chipcynum,fastcynum,&fplist);
+                            GT_GetGadgetAttrs (strgad_display,win,NULL,GTST_String,&str_display,TAG_END);
+
+
+                            Boot(num,chipcynum,fastcynum,&fplist,str_display);
                           break;
 
                           case GID_INSERTDF0:
